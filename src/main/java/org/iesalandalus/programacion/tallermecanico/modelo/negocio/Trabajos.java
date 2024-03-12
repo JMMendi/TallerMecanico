@@ -8,15 +8,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Trabajos {
+public class Trabajos implements ITrabajos {
     private List<Trabajo> coleccionTrabajos;
 
     public Trabajos() {
         coleccionTrabajos = new ArrayList<>();
     }
+    @Override
     public List<Trabajo> get() {
         return new ArrayList<>(coleccionTrabajos);
     }
+    @Override
     public List<Trabajo> get(Cliente cliente) {
         List<Trabajo> revisionesClientes = new ArrayList<>();
         for (Trabajo trabajo : coleccionTrabajos) {
@@ -26,6 +28,7 @@ public class Trabajos {
         }
         return revisionesClientes;
     }
+    @Override
     public List<Trabajo> get(Vehiculo vehiculo) {
         List<Trabajo> vehiculos = new ArrayList<>();
         for (Trabajo trabajo : coleccionTrabajos) {
@@ -35,6 +38,7 @@ public class Trabajos {
         }
         return vehiculos;
     }
+    @Override
     public void insertar(Trabajo trabajo) throws OperationNotSupportedException {
         Objects.requireNonNull(trabajo, "No se puede insertar una revisión nula.");
         comprobarTrabajo(trabajo.getCliente(), trabajo.getVehiculo(), trabajo.getFechaInicio());
@@ -66,6 +70,7 @@ public class Trabajos {
         return indice == -1 ? null : coleccionTrabajos.get(indice);
     }
 
+    @Override
     public void anadirHoras(int horas, Trabajo trabajo) throws OperationNotSupportedException {
         Objects.requireNonNull(trabajo, "No puedo operar sobre una revisión nula.");
         if (getTrabajo(trabajo) == null) {
@@ -74,6 +79,7 @@ public class Trabajos {
         getTrabajo(trabajo);
         trabajo.anadirHoras(horas);
     }
+    @Override
     public void anadirPrecioMaterial(Mecanico mecanico, float precioMaterial) throws OperationNotSupportedException {
         Objects.requireNonNull(mecanico, "No puedo operar sobre una revisión nula.");
         if (getTrabajo(mecanico) == null) {
@@ -81,6 +87,7 @@ public class Trabajos {
         }
         mecanico.anadirPrecioMaterial(precioMaterial);
     }
+    @Override
     public void cerrar(Trabajo trabajo, LocalDate fechaFin) throws OperationNotSupportedException {
         Objects.requireNonNull(trabajo, "No puedo operar sobre una revisión nula.");
         if (getTrabajo(trabajo) == null) {
@@ -88,10 +95,12 @@ public class Trabajos {
         }
         trabajo.cerrar(fechaFin);
     }
+    @Override
     public Trabajo buscar(Trabajo trabajo) {
         Objects.requireNonNull(trabajo, "No se puede buscar una revisión nula.");
         return coleccionTrabajos.contains(trabajo) ? getTrabajo(trabajo) : null;
     }
+    @Override
     public void borrar(Trabajo trabajo) throws OperationNotSupportedException {
         Objects.requireNonNull(trabajo, "No se puede borrar una revisión nula.");
         if (!coleccionTrabajos.contains(trabajo)) {
