@@ -174,7 +174,7 @@ class TrabajosTest {
     @Test
     void anadirHorasTrabajoValidoHorasValidasAnadeHorasCorrectamente() {
         assertDoesNotThrow(() -> trabajos.insertar(revision));
-        assertDoesNotThrow(() -> trabajos.anadirHoras(revision, 10));
+        assertDoesNotThrow(() -> trabajos.anadirHoras(revision,10));
         when(revision.getHoras()).thenReturn(10);
         Trabajo trabajo = trabajos.buscar(revision);
         assertEquals(10, trabajo.getHoras());

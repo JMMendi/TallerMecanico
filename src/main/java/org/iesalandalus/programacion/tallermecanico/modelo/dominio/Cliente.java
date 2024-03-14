@@ -5,7 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Cliente {
-    private static final String ER_NOMBRE = "(?:[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+ ?)+";
+    private static final String ER_NOMBRE = "(?:[A-Z][a-záéíóúñ]+ ?)+";
     private static final String ER_DNI = "(\\d{8})([A-Z])";
     private static final String ER_TELEFONO = "\\d{9}";
     private String nombre;
@@ -59,7 +59,7 @@ public class Cliente {
         int dniCopia = Integer.parseInt(dni.substring(0,dni.length()-2));
 
         char[] letraDNI = {'T','R','W','A','G','M','Y','F','P','D','X','B','N','J','Z','S','Q','V','H','L','C','K','E'};
-        if (letra == 'I' || letra == 'O' || letra == 'U' || letra == 'Ñ' || letra == 'V' || letra == 'L') {
+        if (letra == 'I' || letra == 'O' || letra == 'U' || letra == 'V' || letra == 'L') {
             throw new IllegalArgumentException("La letra del DNI no es correcta.");
         }
 
