@@ -8,7 +8,7 @@ import javax.naming.OperationNotSupportedException;
 public interface IControlador extends ReceptorEventos {
     void comenzar() throws OperationNotSupportedException;
 
-    void actualizar(Evento evento);
+    void actualizar(Evento evento) throws OperationNotSupportedException;
 
     void terminar();
 }
