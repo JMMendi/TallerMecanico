@@ -80,13 +80,13 @@ public class VistaTexto implements Vista {
         String leerModelo;
 
         System.out.print("Introduce la marca del vehículo: ");
-        leerMarca = Entrada.cadena();
+        leerMarca = Consola.leerCadena(Entrada.cadena());
 
         System.out.print("Introduce la matrícula del vehículo: ");
-        leerMatricula = Entrada.cadena();
+        leerMatricula = Consola.leerCadena(Entrada.cadena());
 
         System.out.print("Introduce el modelo del vehículo: ");
-        leerModelo = Entrada.cadena();
+        leerModelo = Consola.leerCadena(Entrada.cadena());
 
         return new Vehiculo(leerMarca, leerModelo, leerMatricula);
     }
@@ -95,34 +95,34 @@ public class VistaTexto implements Vista {
     public Vehiculo leerVehiculoMatricula() {
         String leerMatricula;
         System.out.print("Introduce la matrícula del vehículo aquí: ");
-        leerMatricula = Entrada.cadena();
+        leerMatricula = Consola.leerCadena(Entrada.cadena());
 
         return Vehiculo.get(leerMatricula);
     }
 
     @Override
     public Trabajo leerRevision() {
-        String leerFecha;
+        LocalDate leerFecha;
         System.out.print("Introduce la fecha de inicio de la revisión (Recuerde: el formato es dd/MM/yyyy): ");
-        leerFecha = Entrada.cadena();
+        leerFecha = Consola.leerFecha(Entrada.cadena());
 
-        return new Revision(leerCliente(), leerVehiculo(), LocalDate.parse(leerFecha));
+        return new Revision(leerCliente(), leerVehiculo(), leerFecha);
     }
 
     @Override
     public Trabajo leerMecanico() {
-        String leerFecha;
+        LocalDate leerFecha;
         System.out.print("Introduce la fecha de inicio de la revisión (Recuerde: el formato es dd/MM/yyyy): ");
-        leerFecha = Entrada.cadena();
+        leerFecha = Consola.leerFecha(Entrada.cadena());
 
-        return new Mecanico(leerCliente(), leerVehiculo(), LocalDate.parse(leerFecha));
+        return new Mecanico(leerCliente(), leerVehiculo(), leerFecha);
     }
 
     @Override
     public int leerHoras() {
         int horas;
         System.out.print("Introduce el número de horas de la revisión aquí: ");
-        horas = Entrada.entero();
+        horas = Consola.leerEntero(Entrada.cadena());
         return horas;
     }
 
@@ -130,7 +130,7 @@ public class VistaTexto implements Vista {
     public float leerPrecioMaterial() {
         float precioMaterial;
         System.out.print("Introduce el precio del material aquí: ");
-        precioMaterial = Entrada.real();
+        precioMaterial = Consola.leerReal(Entrada.cadena());
 
         return precioMaterial;
     }
@@ -145,41 +145,14 @@ public class VistaTexto implements Vista {
     }
 
     private void ejecutar(Evento evento) throws OperationNotSupportedException {
-        switch (evento) {
-            case INSERTAR_CLIENTE -> notificarResultado(evento, "Insertando Cliente", true);
-            case INSERTAR_VEHICULO -> notificarResultado(evento, "Insertando Vehículo", true);
-            case INSERTAR_REVISION -> notificarResultado(evento, "Insertando Revisión", true);
-            case BUSCAR_CLIENTE -> notificarResultado(evento, "Buscando Cliente", true);
-            case BUSCAR_VEHICULO -> notificarResultado(evento, "Buscando Vehículo", true);
-            case BUSCAR_TRABAJO -> notificarResultado(evento, "Buscando Trabajo", true);
-            case MODIFICAR_CLIENTE -> notificarResultado(evento, "Modificando Cliente", true);
-            case ANADIR_HORAS_TRABAJO -> notificarResultado(evento, "Añadiendo Horas al Trabajo", true);
-            case ANADIR_PRECIO_MATERIAL_TRABAJO -> notificarResultado(evento, "Añadiendo Precio de Material al Trabajo", true);
-            case INSERTAR_MECANICO -> notificarResultado(evento, "Insertando Trabajo Mecánico", true);
-            case CERRAR_TRABAJO -> notificarResultado(evento, "Cerrando Trabajo", true);
-            case BORRAR_CLIENTE -> notificarResultado(evento, "Borrando Cliente", true);
-            case BORRAR_TRABAJO -> notificarResultado(evento, "Borrando Trabajo", true);
-            case BORRAR_VEHICULO -> notificarResultado(evento, "Borrando Vehículo", true);
-            case LISTAR_CLIENTES -> notificarResultado(evento, "Listando Clientes", true);
-            case LISTAR_VEHICULOS -> notificarResultado(evento, "Listando Vehículos", true);
-            case LISTAR_TRABAJOS -> notificarResultado(evento, "Listando Trabajos", true);
-            case LISTAR_TRABAJOS_CLIENTE -> notificarResultado(evento, "Listando Trabajos del Cliente", true);
-            case LISTAR_TRABAJOS_VEHICULO -> notificarResultado(evento, "Listando Trabajos del Vehículo", true);
-            case SALIR -> notificarResultado(evento, "Saliendo", true);
-            default -> System.out.print("Error, tiene que escoger de entre las opciones válidas.");
-        }
+        Consola.mostrarCabecera(evento.toString());
+        gestorEventos.notificar(evento);
     }
 
     @Override
     public void notificarResultado(Evento evento, String texto, boolean exito) throws OperationNotSupportedException {
         Objects.requireNonNull(evento, "El evento no puede ser nulo.");
         Objects.requireNonNull(texto, "El texto no puede ser nulo.");
-        gestorEventos.notificar(evento);
-        if (exito) {
-            System.out.printf("%s%n", texto);
-        } else {
-            System.out.printf("ERROR: %s%n", texto);
-        }
     }
     @Override
     public void mostrarCliente(Cliente cliente){

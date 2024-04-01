@@ -27,12 +27,17 @@ public enum Evento {
     private String texto;
     private int codigo;
     private static Map<Integer, Evento> opciones = new HashMap<>();
+    static {
+        for (Evento evento : Evento.values()) {
+            opciones.put(evento.codigo, evento);
+        }
+    }
     private Evento(int codigo, String texto) {
         this.texto = texto;
         this.codigo = codigo;
     }
     public static boolean esValida(int codigo) {
-        return codigo >= 1 && codigo <= 19;
+        return opciones.containsKey(codigo);
     }
     public static Evento get(int codigo) {
         if (!esValida(codigo)) {

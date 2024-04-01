@@ -1,5 +1,6 @@
 package org.iesalandalus.programacion.tallermecanico.vista.eventos;
 
+import javax.naming.OperationNotSupportedException;
 import java.util.*;
 
 public class GestorEventos {
@@ -34,8 +35,10 @@ public class GestorEventos {
         }
     }
 
-    public void notificar(Evento evento) {
+    public void notificar(Evento evento) throws OperationNotSupportedException {
         Objects.requireNonNull(evento, "El evento no puede ser nulo.");
-        System.out.printf("Se está lanzando el comando %s%n", evento);
+        for (ReceptorEventos receptor : receptores.get(evento)) {
+            receptor.actualizar(evento);
+        }
     }
 }

@@ -22,6 +22,7 @@ public abstract class Trabajo {
         this.horas = 0;
         this.fechaFin = null;
     }
+
     protected Trabajo(Trabajo trabajo) {
         Objects.requireNonNull(trabajo, "El trabajo no puede ser nulo.");
         this.cliente = trabajo.cliente;
@@ -31,7 +32,7 @@ public abstract class Trabajo {
         this.fechaFin = trabajo.fechaFin;
     }
 
-    public static Trabajo copiar(Trabajo trabajo){
+    public static Trabajo copiar(Trabajo trabajo) {
         Objects.requireNonNull(trabajo, "El trabajo no puede ser nulo.");
         if (trabajo instanceof Revision revision) {
             trabajo = new Revision(revision);
@@ -40,6 +41,7 @@ public abstract class Trabajo {
         }
         return trabajo;
     }
+
     public static Trabajo get(Vehiculo vehiculo) {
         Objects.requireNonNull(vehiculo, "El vehículo no puede ser nulo.");
         return new Revision(new Cliente("Pepe", "11111111D", "950950950"), vehiculo, LocalDate.now());
@@ -132,8 +134,7 @@ public abstract class Trabajo {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Trabajo trabajo = (Trabajo) o;
+        if (!(o instanceof Trabajo trabajo)) return false;
         return Objects.equals(fechaInicio, trabajo.fechaInicio) && Objects.equals(cliente, trabajo.cliente) && Objects.equals(vehiculo, trabajo.vehiculo);
     }
 
