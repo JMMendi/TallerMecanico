@@ -24,8 +24,8 @@ public enum Evento {
     ANADIR_PRECIO_MATERIAL_TRABAJO(18,"Añadir Precio de Material al Trabajo"),
     CERRAR_TRABAJO(19,"Cerrar Trabajo"),
     SALIR(20,"Salir");
-    private String texto;
-    private int codigo;
+    private final String texto;
+    private final int codigo;
     private static Map<Integer, Evento> opciones = new HashMap<>();
     static {
         for (Evento evento : Evento.values()) {
@@ -48,6 +48,6 @@ public enum Evento {
 
     @Override
     public String toString() {
-        return String.format("%s - %s%n", this.codigo, this.texto);
+        return String.format("%s - %s%n", codigo, texto);
     }
 }

@@ -6,6 +6,7 @@ import org.iesalandalus.programacion.tallermecanico.modelo.negocio.ITrabajos;
 import javax.naming.OperationNotSupportedException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
@@ -71,14 +72,21 @@ public class Trabajos implements ITrabajos {
         return indice == -1 ? null : coleccionTrabajos.get(indice);
     }
 
-    private Trabajo getTrabajoAbierto(Vehiculo vehiculo) { // Tienes que ver si está cerrado o no animal!
+    private Trabajo getTrabajoAbierto(Vehiculo vehiculo) {
         Objects.requireNonNull(vehiculo, "El vehículo no puede ser nulo.");
         Trabajo trabajoAbierto = null;
-        for (Trabajo trabajo : coleccionTrabajos) {
-            if (trabajo.getVehiculo().equals(vehiculo) && !trabajo.estaCerrado()) {
+        Iterator<Trabajo> iteradorTrabajos = coleccionTrabajos.iterator();
+        while (iteradorTrabajos.hasNext() && trabajoAbierto == null) {
+            Trabajo trabajo = iteradorTrabajos.next();
+            if (!trabajo.estaCerrado() && trabajo.getVehiculo().equals(vehiculo)) {
                 trabajoAbierto = trabajo;
             }
         }
+        /* for (Trabajo trabajo : coleccionTrabajos) {
+            if (trabajo.getVehiculo().equals(vehiculo) && !trabajo.estaCerrado()) {
+                trabajoAbierto = trabajo;
+            }
+        } */
         return trabajoAbierto;
     }
 
@@ -88,7 +96,9 @@ public class Trabajos implements ITrabajos {
         if (getTrabajoAbierto(trabajo.getVehiculo()) == null) {
             throw new OperationNotSupportedException("No existe ningún trabajo abierto para dicho vehículo.");
         }
-        getTrabajo(trabajo);
+        if (trabajo instanceof Mecanico) {
+            throw new OperationNotSupportedException("No se puede añadir horas para este tipo de trabajos.");
+        }
         trabajo.anadirHoras(horas);
     }
     @Override
@@ -105,7 +115,7 @@ public class Trabajos implements ITrabajos {
     @Override
     public void cerrar(Trabajo trabajo, LocalDate fechaFin) throws OperationNotSupportedException {
         Objects.requireNonNull(trabajo, "No puedo cerrar un trabajo nulo.");
-        if (getTrabajo(trabajo) == null) {
+        if (getTrabajoAbierto(trabajo.getVehiculo()) == null) {
             throw new OperationNotSupportedException("No existe ningún trabajo abierto para dicho vehículo.");
         }
         trabajo.cerrar(fechaFin);

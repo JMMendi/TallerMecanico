@@ -52,6 +52,9 @@ public class ModeloCascada implements Modelo {
     @Override
     public Cliente buscar(Cliente cliente) {
         Objects.requireNonNull(clientes.buscar(cliente), "No existe un cliente igual.");
+        if (clientes.buscar(cliente) == null) {
+            throw new IllegalArgumentException("El Cliente que busca no existe.");
+        }
         return new Cliente(cliente);
     }
     @Override

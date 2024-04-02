@@ -32,6 +32,8 @@ public interface Vista {
 
     public LocalDate leerFechaCierre();
 
+    public Trabajo leerTrabajoVehiculo();
+
     GestorEventos getGestorEventos();
 
     void comenzar() throws OperationNotSupportedException;

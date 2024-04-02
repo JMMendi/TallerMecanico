@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class VistaTexto implements Vista {
-    private final GestorEventos gestorEventos = new GestorEventos();
+    private final GestorEventos gestorEventos = new GestorEventos(Evento.values());
 
     @Override
     public GestorEventos getGestorEventos() {
@@ -20,9 +20,12 @@ public class VistaTexto implements Vista {
 
     @Override
     public void comenzar() throws OperationNotSupportedException {
-        Consola.mostrarMenu();
-        ejecutar(Consola.elegirOpcion());
-
+        Evento opcion;
+        do {
+            Consola.mostrarMenu();
+            opcion = Consola.elegirOpcion();
+            ejecutar(opcion);
+        } while (opcion != Evento.SALIR);
     }
     @Override
     public void terminar() {
@@ -101,21 +104,26 @@ public class VistaTexto implements Vista {
     }
 
     @Override
-    public Trabajo leerRevision() {
-        LocalDate leerFecha;
-        System.out.print("Introduce la fecha de inicio de la revisión (Recuerde: el formato es dd/MM/yyyy): ");
-        leerFecha = Consola.leerFecha(Entrada.cadena());
+    public Trabajo leerTrabajoVehiculo() {
+        return Trabajo.get(leerVehiculoMatricula());
+    }
 
-        return new Revision(leerCliente(), leerVehiculo(), leerFecha);
+    @Override
+    public Trabajo leerRevision() {
+        Cliente cliente = leerClienteDni();
+        Vehiculo vehiculo = leerVehiculoMatricula();
+        LocalDate leerFecha = Consola.leerFecha(Entrada.cadena());
+
+        return new Revision(cliente, vehiculo, leerFecha);
     }
 
     @Override
     public Trabajo leerMecanico() {
-        LocalDate leerFecha;
-        System.out.print("Introduce la fecha de inicio de la revisión (Recuerde: el formato es dd/MM/yyyy): ");
-        leerFecha = Consola.leerFecha(Entrada.cadena());
+        Cliente cliente = leerClienteDni();
+        Vehiculo vehiculo = leerVehiculoMatricula();
+        LocalDate leerFecha = Consola.leerFecha(Entrada.cadena());
 
-        return new Mecanico(leerCliente(), leerVehiculo(), leerFecha);
+        return new Mecanico(cliente, vehiculo, leerFecha);
     }
 
     @Override
@@ -150,9 +158,14 @@ public class VistaTexto implements Vista {
     }
 
     @Override
-    public void notificarResultado(Evento evento, String texto, boolean exito) throws OperationNotSupportedException {
+    public void notificarResultado(Evento evento, String texto, boolean exito){
         Objects.requireNonNull(evento, "El evento no puede ser nulo.");
         Objects.requireNonNull(texto, "El texto no puede ser nulo.");
+        if (exito) {
+            System.out.println(texto);
+        } else {
+            System.out.printf("ERROR: %s%n", texto);
+        }
     }
     @Override
     public void mostrarCliente(Cliente cliente){
@@ -167,15 +180,27 @@ public class VistaTexto implements Vista {
         System.out.printf("%s%n", trabajo);
     }
     @Override
-    public void mostrarClientes(List<Cliente> clientes) {
-        System.out.printf("%s%n", clientes);
+    public void mostrarClientes(List<Cliente> clientes) { //Mirar si están vacios o no. Si no lo estan mostrar, sino dar error
+        if (!clientes.isEmpty()) {
+            System.out.printf("%s%n", clientes);
+        } else {
+            throw new IllegalArgumentException("La lista de Clientes está vacía.");
+        }
     }
     @Override
     public void mostrarVehiculos(List<Vehiculo> vehiculos) {
-        System.out.printf("%s%n", vehiculos);
+        if (!vehiculos.isEmpty()) {
+            System.out.printf("%s%n", vehiculos);
+        } else {
+            throw new IllegalArgumentException("La lista de Vehículos está vacía.");
+        }
     }
     @Override
     public void mostrarTrabajos(List<Trabajo> trabajos) {
-        System.out.printf("%s%n", trabajos);
+        if (!trabajos.isEmpty()) {
+            System.out.printf("%s%n", trabajos);
+        } else {
+            throw new IllegalArgumentException("La lista de Trabajos está vacía.");
+        }
     }
 }

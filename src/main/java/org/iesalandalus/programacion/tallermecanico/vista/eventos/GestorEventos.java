@@ -4,7 +4,7 @@ import javax.naming.OperationNotSupportedException;
 import java.util.*;
 
 public class GestorEventos {
-    private Map<Evento, List<ReceptorEventos>> receptores;
+    private final Map<Evento, List<ReceptorEventos>> receptores;
 
     public GestorEventos(Evento... eventos) {
         receptores = new EnumMap<>(Evento.class);
@@ -23,6 +23,8 @@ public class GestorEventos {
                 receptores.replace(eventoNuevo, subscriptores);
             }
         }
+        // for (Evento evento : eventos) List<ReceptoEventos> usuarios = receptores.get(evento
+        // usuarios.add(receptor) <--- Esto usarlo en el desubscribir
     }
 
     public void desubscribir(ReceptorEventos receptor, Evento... evento) {
