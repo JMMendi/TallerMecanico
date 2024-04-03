@@ -4,36 +4,30 @@ import javax.naming.OperationNotSupportedException;
 import java.util.*;
 
 public class GestorEventos {
-    private final Map<Evento, List<ReceptorEventos>> receptores;
+    Map<Evento, List<ReceptorEventos>> receptores = new EnumMap<>(Evento.class);
 
     public GestorEventos(Evento... eventos) {
-        receptores = new EnumMap<>(Evento.class);
+        Objects.requireNonNull(eventos, "Se debe gestionar algún evento.");
         for (Evento evento : eventos) {
             receptores.put(evento, new ArrayList<>());
         }
     }
 
-    public void subscribir(ReceptorEventos receptor, Evento... evento) {
+    public void subscribir(ReceptorEventos receptor, Evento... eventos) {
         Objects.requireNonNull(receptor, "El receptor de eventos no puede ser nulo.");
-        Objects.requireNonNull(evento, "El evento no puede ser nulo.");
-        for (Evento eventoNuevo : evento) {
-            if (receptores.containsKey(eventoNuevo)) {
-                List<ReceptorEventos> subscriptores = new ArrayList<>();
-                subscriptores.add(receptor);
-                receptores.replace(eventoNuevo, subscriptores);
-            }
+        Objects.requireNonNull(eventos, "El evento no puede ser nulo.");
+        for (Evento evento : eventos) {
+            List<ReceptorEventos> usuarios = receptores.get(evento);
+            usuarios.add(receptor);
         }
-        // for (Evento evento : eventos) List<ReceptoEventos> usuarios = receptores.get(evento
-        // usuarios.add(receptor) <--- Esto usarlo en el desubscribir
     }
 
-    public void desubscribir(ReceptorEventos receptor, Evento... evento) {
+    public void desubscribir(ReceptorEventos receptor, Evento... eventos) {
         Objects.requireNonNull(receptor, "El receptor de eventos no puede ser nulo.");
-        Objects.requireNonNull(evento, "El evento no puede ser nulo.");
-        for (Evento eventoNuevo : evento) {
-            if (receptores.containsKey(eventoNuevo)) {
-                receptores.get(eventoNuevo).remove(receptor);
-            }
+        Objects.requireNonNull(eventos, "El evento no puede ser nulo.");
+        for (Evento evento : eventos) {
+            List<ReceptorEventos> usuarios = receptores.get(evento);
+            usuarios.remove(receptor);
         }
     }
 

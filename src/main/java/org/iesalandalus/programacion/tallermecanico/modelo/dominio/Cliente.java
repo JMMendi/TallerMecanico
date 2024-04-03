@@ -5,7 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Cliente {
-    private static final String ER_NOMBRE = "(?:[A-Z][a-záéíóúñ]+ ?)+";
+    private static final String ER_NOMBRE = "[A-ZÁÉÍÓÚÑ][a-záéíóúüñ]+(?: [A-ZÁÉÍÓÚ][a-záéíóúüñ]+)*+";
     private static final String ER_DNI = "(\\d{8})([A-Z])";
     private static final String ER_TELEFONO = "\\d{9}";
     private String nombre;
@@ -20,9 +20,9 @@ public class Cliente {
 
     public Cliente(Cliente cliente) {
         Objects.requireNonNull(cliente, "No es posible copiar un cliente nulo.");
-        this.nombre = cliente.nombre;
-        this.dni = cliente.dni;
-        this.telefono = cliente.telefono;
+        nombre = cliente.nombre;
+        dni = cliente.dni;
+        telefono = cliente.telefono;
     }
 
     public String getNombre() {

@@ -19,6 +19,7 @@ public class ModeloCascada implements Modelo {
     private IClientes clientes;
 
     public ModeloCascada(FabricaFuenteDatos fabricaFuenteDatos) {
+        Objects.requireNonNull(fabricaFuenteDatos, "La fábrica de fuente de datos no puede ser nula.");
         clientes = fabricaFuenteDatos.crear().crearClientes();
         vehiculos = fabricaFuenteDatos.crear().crearVehiculos();
         trabajos = fabricaFuenteDatos.crear().crearTrabajos();
@@ -34,7 +35,6 @@ public class ModeloCascada implements Modelo {
     }
     @Override
     public void insertar(Cliente cliente) throws OperationNotSupportedException {
-        Objects.requireNonNull(cliente, "El cliente a insertar no puede ser nulo.");
         clientes.insertar(new Cliente(cliente));
     }
     @Override
@@ -46,15 +46,16 @@ public class ModeloCascada implements Modelo {
         Objects.requireNonNull(trabajo, "La revisión a insertar no puede ser nula.");
         Cliente cliente = clientes.buscar(trabajo.getCliente());
         Vehiculo vehiculo = vehiculos.buscar(trabajo.getVehiculo());
-        trabajos.insertar(new Revision(cliente, vehiculo, trabajo.getFechaInicio()));
-
+        if (trabajo instanceof Revision) {
+            trabajo = new Revision(cliente, vehiculo, trabajo.getFechaInicio());
+        } else {
+            trabajo = new Mecanico(cliente, vehiculo, trabajo.getFechaInicio());
+        }
+        trabajos.insertar(trabajo);
     }
     @Override
     public Cliente buscar(Cliente cliente) {
-        Objects.requireNonNull(clientes.buscar(cliente), "No existe un cliente igual.");
-        if (clientes.buscar(cliente) == null) {
-            throw new IllegalArgumentException("El Cliente que busca no existe.");
-        }
+        cliente = Objects.requireNonNull(clientes.buscar(cliente), "No existe un cliente igual.");
         return new Cliente(cliente);
     }
     @Override
@@ -64,14 +65,8 @@ public class ModeloCascada implements Modelo {
     }
     @Override
     public Trabajo buscar(Trabajo trabajo) {
-        Objects.requireNonNull(trabajos.buscar(trabajo), "La revisión no puede ser nula buscar.");
-        Trabajo trabajoEncontrado = null;
-        if (trabajo instanceof Revision revision) {
-            trabajoEncontrado = new Revision(revision);
-        } else if (trabajo instanceof Mecanico mecanico) {
-            trabajoEncontrado = new Mecanico(mecanico);
-        }
-        return trabajoEncontrado;
+        trabajo = Objects.requireNonNull(trabajos.buscar(trabajo), "La revisión no puede ser nula buscar.");
+        return Trabajo.copiar(trabajo);
     }
     @Override
     public boolean modificar(Cliente cliente, String nombre, String telefono) throws OperationNotSupportedException {

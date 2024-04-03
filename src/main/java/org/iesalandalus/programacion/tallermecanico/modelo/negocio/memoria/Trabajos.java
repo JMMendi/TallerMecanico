@@ -72,34 +72,27 @@ public class Trabajos implements ITrabajos {
         return indice == -1 ? null : coleccionTrabajos.get(indice);
     }
 
-    private Trabajo getTrabajoAbierto(Vehiculo vehiculo) {
+    private Trabajo getTrabajoAbierto(Vehiculo vehiculo) throws OperationNotSupportedException {
         Objects.requireNonNull(vehiculo, "El vehículo no puede ser nulo.");
-        Trabajo trabajoAbierto = null;
+        Trabajo trabajoEncontrado = null;
         Iterator<Trabajo> iteradorTrabajos = coleccionTrabajos.iterator();
-        while (iteradorTrabajos.hasNext() && trabajoAbierto == null) {
+        while (iteradorTrabajos.hasNext() && trabajoEncontrado == null) {
             Trabajo trabajo = iteradorTrabajos.next();
-            if (!trabajo.estaCerrado() && trabajo.getVehiculo().equals(vehiculo)) {
-                trabajoAbierto = trabajo;
+            if (trabajo.getVehiculo().equals(vehiculo) && !trabajo.estaCerrado()) {
+                trabajoEncontrado = trabajo;
             }
         }
-        /* for (Trabajo trabajo : coleccionTrabajos) {
-            if (trabajo.getVehiculo().equals(vehiculo) && !trabajo.estaCerrado()) {
-                trabajoAbierto = trabajo;
-            }
-        } */
-        return trabajoAbierto;
+        if (trabajoEncontrado == null) {
+            throw new OperationNotSupportedException("No existe ningún trabajo abierto para dicho vehículo.");
+        }
+        return trabajoEncontrado;
     }
 
     @Override
     public void anadirHoras(Trabajo trabajo, int horas) throws OperationNotSupportedException {
         Objects.requireNonNull(trabajo, "No puedo añadir horas a un trabajo nulo.");
-        if (getTrabajoAbierto(trabajo.getVehiculo()) == null) {
-            throw new OperationNotSupportedException("No existe ningún trabajo abierto para dicho vehículo.");
-        }
-        if (trabajo instanceof Mecanico) {
-            throw new OperationNotSupportedException("No se puede añadir horas para este tipo de trabajos.");
-        }
-        trabajo.anadirHoras(horas);
+        Trabajo trabajoEncontrado = getTrabajoAbierto(trabajo.getVehiculo());
+        trabajoEncontrado.anadirHoras(horas);
     }
     @Override
     public void anadirPrecioMaterial(Trabajo trabajo, float precioMaterial) throws OperationNotSupportedException {
@@ -123,7 +116,8 @@ public class Trabajos implements ITrabajos {
     @Override
     public Trabajo buscar(Trabajo trabajo) {
         Objects.requireNonNull(trabajo, "No se puede buscar un trabajo nulo.");
-        return coleccionTrabajos.contains(trabajo) ? getTrabajo(trabajo) : null;
+        int indice = coleccionTrabajos.indexOf(trabajo);
+        return (indice == -1) ? null : coleccionTrabajos.get(indice);
     }
     @Override
     public void borrar(Trabajo trabajo) throws OperationNotSupportedException {

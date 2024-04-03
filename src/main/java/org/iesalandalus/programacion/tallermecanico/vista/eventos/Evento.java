@@ -36,6 +36,11 @@ public enum Evento {
         this.texto = texto;
         this.codigo = codigo;
     }
+
+    public int getCodigo() {
+        return codigo;
+    }
+
     public static boolean esValida(int codigo) {
         return opciones.containsKey(codigo);
     }
@@ -48,6 +53,6 @@ public enum Evento {
 
     @Override
     public String toString() {
-        return String.format("%s - %s%n", codigo, texto);
+        return texto;
     }
 }

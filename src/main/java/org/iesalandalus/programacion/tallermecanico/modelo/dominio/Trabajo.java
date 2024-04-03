@@ -25,7 +25,7 @@ public abstract class Trabajo {
 
     protected Trabajo(Trabajo trabajo) {
         Objects.requireNonNull(trabajo, "El trabajo no puede ser nulo.");
-        this.cliente = trabajo.cliente;
+        this.cliente = new Cliente(trabajo.cliente);
         this.vehiculo = trabajo.vehiculo;
         this.fechaInicio = trabajo.fechaInicio;
         this.horas = trabajo.horas;
@@ -34,17 +34,18 @@ public abstract class Trabajo {
 
     public static Trabajo copiar(Trabajo trabajo) {
         Objects.requireNonNull(trabajo, "El trabajo no puede ser nulo.");
+        Trabajo trabajoCopiado = null;
         if (trabajo instanceof Revision revision) {
-            trabajo = new Revision(revision);
+            trabajoCopiado = new Revision(revision);
         } else if (trabajo instanceof Mecanico mecanico) {
-            trabajo = new Mecanico(mecanico);
+            trabajoCopiado = new Mecanico(mecanico);
         }
-        return trabajo;
+        return trabajoCopiado;
     }
 
     public static Trabajo get(Vehiculo vehiculo) {
         Objects.requireNonNull(vehiculo, "El vehículo no puede ser nulo.");
-        return new Revision(new Cliente("Pepe", "11111111D", "950950950"), vehiculo, LocalDate.now());
+        return new Revision(Cliente.get("11111111H"), vehiculo, LocalDate.now());
     }
 
     public Cliente getCliente() {
@@ -122,7 +123,7 @@ public abstract class Trabajo {
     }
 
     private float getPrecioFijo() {
-        return FACTOR_DIA * getDias();
+        return (estaCerrado()) ? FACTOR_DIA * getDias() : 0;
     }
 
     public float getPrecio() {

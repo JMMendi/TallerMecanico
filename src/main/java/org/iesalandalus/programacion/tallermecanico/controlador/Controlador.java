@@ -13,6 +13,8 @@ public class Controlador implements IControlador {
     private final Modelo modelo;
 
     public Controlador(Modelo modelo, Vista vista) {
+        Objects.requireNonNull(modelo, "ERROR: El modelo no puede ser nulo.");
+        Objects.requireNonNull(vista, "ERROR: La vista no puede ser nula.");
         this.modelo = modelo;
         this.vista = vista;
         vista.getGestorEventos().subscribir(this, Evento.values());
