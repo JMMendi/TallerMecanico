@@ -1,6 +1,9 @@
 package org.iesalandalus.programacion.tallermecanico.controlador;
 
+import org.iesalandalus.programacion.tallermecanico.modelo.FabricaModelo;
 import org.iesalandalus.programacion.tallermecanico.modelo.Modelo;
+import org.iesalandalus.programacion.tallermecanico.modelo.negocio.FabricaFuenteDatos;
+import org.iesalandalus.programacion.tallermecanico.vista.FabricaVista;
 import org.iesalandalus.programacion.tallermecanico.vista.eventos.Evento;
 import org.iesalandalus.programacion.tallermecanico.vista.texto.Vista;
 
@@ -9,14 +12,17 @@ import javax.naming.OperationNotSupportedException;
 import java.util.Objects;
 
 public class Controlador implements IControlador {
-    private final Vista vista;
-    private final Modelo modelo;
+    private static FabricaModelo fabricaModelo;
+    private static FabricaFuenteDatos fabricaFuenteDatos;
+    private static FabricaVista fabricaVista;
+    private static Modelo modelo;
+    private static Vista vista;
 
     public Controlador(Modelo modelo, Vista vista) {
         Objects.requireNonNull(modelo, "ERROR: El modelo no puede ser nulo.");
         Objects.requireNonNull(vista, "ERROR: La vista no puede ser nula.");
-        this.modelo = modelo;
-        this.vista = vista;
+        modelo = fabricaModelo.crear(fabricaFuenteDatos);
+        vista = fabricaVista.crear();
         vista.getGestorEventos().subscribir(this, Evento.values());
     }
 
