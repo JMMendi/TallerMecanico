@@ -1,7 +1,7 @@
 package org.iesalandalus.programacion.tallermecanico.modelo.negocio;
 
-import org.iesalandalus.programacion.tallermecanico.modelo.negocio.memoria.FuenteDatosMemoria;
-import org.iesalandalus.programacion.tallermecanico.modelo.negocio.memoria.IFuenteDatos;
+import org.iesalandalus.programacion.tallermecanico.modelo.negocio.ficheros.FuenteDatosMemoria;
+import org.iesalandalus.programacion.tallermecanico.modelo.negocio.ficheros.IFuenteDatos;
 
 public enum FabricaFuenteDatos {
     MEMORIA {

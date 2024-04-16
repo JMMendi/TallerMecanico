@@ -1,25 +1,140 @@
-package org.iesalandalus.programacion.tallermecanico.modelo.negocio.memoria;
+package org.iesalandalus.programacion.tallermecanico.modelo.negocio.ficheros;
 
 import org.iesalandalus.programacion.tallermecanico.modelo.dominio.*;
 import org.iesalandalus.programacion.tallermecanico.modelo.negocio.ITrabajos;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import javax.naming.OperationNotSupportedException;
+import javax.xml.parsers.DocumentBuilder;
+import java.io.File;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 public class Trabajos implements ITrabajos {
+    private static String FICHERO_TRABAJOS = String.format("%s%s%s", "Datos", File.separator, "ficheroTrabajos.txt");
+    private static DateTimeFormatter FORMATO_FECHA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static String RAIZ = String.format("%s%s%s", "Datos", File.separator, "ficheroTrabajos.txt");
+    private static String TRABAJO = "trabajo";
+    private static String CLIENTE = "cliente";
+    private static String VEHICULO = "vehiculo";
+    private static String FECHA_INICIO = "fecha inicio";
+    private static String FECHA_FIN = "fecha fin";
+    private static String HORAS = "horas";
+    private static String PRECIO_MATERIAL = "precio material";
+    private static String TIPO = "tipo";
+    private static String REVISION = "revision";
+    private static String MECANICO = "mecanico";
+
+
+    private static Trabajos instancia;
     private List<Trabajo> coleccionTrabajos;
 
-    public Trabajos() {
+    private Trabajos() {
         coleccionTrabajos = new ArrayList<>();
     }
+
+
+    static Trabajos getInstancia() {
+        if (instancia == null) {
+            instancia = new Trabajos();
+        }
+        return instancia;
+    }
+
+    public void comenzar() {
+
+    }
+    private void procesarDocumentoXML(Document documentoXML) {
+        Objects.requireNonNull(documentoXML, "El documento XML no puede ser nulo.");
+        UtilidadesXml.leerDocumentoXml(FICHERO_TRABAJOS);
+    }
+    private Trabajo getTrabajo(Element element) throws OperationNotSupportedException {
+        Document documentoXml = UtilidadesXml.leerDocumentoXml(FICHERO_TRABAJOS);
+        Trabajo elementoTrabajo = null;
+        Cliente cliente = null;
+        Vehiculo vehiculo = null;
+        LocalDate fechaInicio = null;
+        LocalDate fechaFin = null;
+        int horas = 0;
+        float precioMaterial = 0;
+        if (documentoXml.getDocumentElement().equals(element)) {
+            cliente = Cliente.get(element.getAttribute(CLIENTE));
+            vehiculo = Vehiculo.get(element.getAttribute(VEHICULO));
+            fechaInicio = LocalDate.parse(element.getAttribute(FECHA_INICIO), FORMATO_FECHA);
+            if (element.getAttribute(TIPO).equals(REVISION)) {
+                elementoTrabajo = new Revision(cliente, vehiculo, fechaInicio);
+            } else {
+                elementoTrabajo = new Mecanico(cliente, vehiculo, fechaInicio);
+            }
+            if (element.hasAttribute(PRECIO_MATERIAL) && elementoTrabajo instanceof Mecanico) {
+                precioMaterial = Float.parseFloat(element.getAttribute(PRECIO_MATERIAL));
+                ((Mecanico) elementoTrabajo).anadirPrecioMaterial(precioMaterial);
+            }
+            if (element.hasAttribute(HORAS)) {
+                horas = Integer.parseInt(element.getAttribute(HORAS));
+                elementoTrabajo.anadirHoras(horas);
+            }
+            if (element.hasAttribute(FECHA_FIN)) {
+                fechaFin = LocalDate.parse(element.getAttribute(FECHA_FIN), FORMATO_FECHA);
+                elementoTrabajo.cerrar(fechaFin);
+            }
+        }
+        return elementoTrabajo;
+    }
+
+    private Document crearDocumentoXml(){
+        DocumentBuilder constructor = UtilidadesXml.crearConstructorDocumentoXml();
+        Document documentoXml = null;
+        if (constructor != null) {
+            documentoXml = constructor.newDocument();
+        }
+        return documentoXml;
+    }
+    private Element getElemento(Document documentoXml, Trabajo trabajo) {
+        Objects.requireNonNull(documentoXml, "El documento xml no puede ser nulo.");
+        Objects.requireNonNull(trabajo, "El trabajo no puede ser nulo.");
+        Element elementoTrabajo = documentoXml.createElement("trabajo");
+        elementoTrabajo.setAttribute(CLIENTE, trabajo.getCliente().getDni());
+        elementoTrabajo.setAttribute(VEHICULO, trabajo.getVehiculo().matricula());
+        elementoTrabajo.setAttribute(FECHA_INICIO, trabajo.getFechaInicio().toString());
+        if (trabajo.getHoras() != 0) {
+            elementoTrabajo.setAttribute(HORAS, Integer.toString(trabajo.getHoras()));
+        }
+        if (trabajo.estaCerrado()) {
+            elementoTrabajo.setAttribute(FECHA_FIN, trabajo.getFechaFin().toString());
+        }
+        if (TipoTrabajo.get(trabajo) != null) {
+            elementoTrabajo.setAttribute(TIPO, TipoTrabajo.get(trabajo).toString());
+        }
+        if (trabajo instanceof Mecanico mecanico) {
+            if (mecanico.getPrecioMaterial() != 0) {
+                String cadenaPrecio = Float.toString(mecanico.getPrecioMaterial());
+                String.format(Locale.US, "%f", cadenaPrecio);
+                elementoTrabajo.setAttribute(PRECIO_MATERIAL, cadenaPrecio);
+            }
+        }
+        return elementoTrabajo;
+    }
+
+    public Map<TipoTrabajo, Integer> getEstadisticasMensuales (LocalDate mes) {
+        Map<TipoTrabajo, Integer> estadisticaMensual = inicializarEstadistica();
+        // Recorre el documentoXML y quedate con los que, cuya fecha de inicio sea el de ese mes, coges el tipo y lo añades al mapa después de ir sumando el contador
+
+
+        return estadisticaMensual;
+    }
+    private Map<TipoTrabajo, Integer> inicializarEstadistica() {
+        Map<TipoTrabajo, Integer> estadisticas = new HashMap<>();
+
+    }
+
     @Override
     public List<Trabajo> get() {
         return new ArrayList<>(coleccionTrabajos);
     }
+
     @Override
     public List<Trabajo> get(Cliente cliente) {
         List<Trabajo> revisionesClientes = new ArrayList<>();
