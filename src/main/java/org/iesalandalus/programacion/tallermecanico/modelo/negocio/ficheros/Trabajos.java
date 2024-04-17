@@ -46,6 +46,12 @@ public class Trabajos implements ITrabajos {
     public void comenzar() {
 
     }
+
+    @Override
+    public void terminar() {
+
+    }
+
     private void procesarDocumentoXML(Document documentoXML) {
         Objects.requireNonNull(documentoXML, "El documento XML no puede ser nulo.");
         UtilidadesXml.leerDocumentoXml(FICHERO_TRABAJOS);
@@ -120,14 +126,31 @@ public class Trabajos implements ITrabajos {
 
     public Map<TipoTrabajo, Integer> getEstadisticasMensuales (LocalDate mes) {
         Map<TipoTrabajo, Integer> estadisticaMensual = inicializarEstadistica();
-        // Recorre el documentoXML y quedate con los que, cuya fecha de inicio sea el de ese mes, coges el tipo y lo añades al mapa después de ir sumando el contador
-
-
+        int trabajosMecanicos = 0;
+        int trabajosRevisiones = 0;
+        for (Trabajo trabajo : coleccionTrabajos) {
+            if (trabajo instanceof Mecanico) {
+                if (trabajo.getFechaInicio().getMonth().equals(mes.getMonth())){
+                    trabajosMecanicos++;
+                }
+            } else if (trabajo instanceof Revision) {
+                if (trabajo.getFechaInicio().getMonth().equals(mes.getMonth())) {
+                    trabajosRevisiones++;
+                }
+            }
+        }
+        estadisticaMensual.replace(TipoTrabajo.MECANICO, trabajosMecanicos);
+        estadisticaMensual.replace(TipoTrabajo.REVISION, trabajosRevisiones);
         return estadisticaMensual;
     }
     private Map<TipoTrabajo, Integer> inicializarEstadistica() {
         Map<TipoTrabajo, Integer> estadisticas = new HashMap<>();
+        int trabajosMecanicos = 0;
+        int trabajosRevisiones = 0;
 
+        estadisticas.put(TipoTrabajo.MECANICO, trabajosMecanicos);
+        estadisticas.put(TipoTrabajo.REVISION, trabajosRevisiones);
+        return estadisticas;
     }
 
     @Override
