@@ -4,6 +4,8 @@ import org.iesalandalus.programacion.tallermecanico.modelo.dominio.Vehiculo;
 import org.iesalandalus.programacion.tallermecanico.modelo.negocio.IVehiculos;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import javax.naming.OperationNotSupportedException;
 import javax.xml.parsers.DocumentBuilder;
@@ -33,11 +35,22 @@ public class Vehiculos implements IVehiculos {
         return instancia;
     }
     public void comenzar() {
-
+        Document vehiculosXml = UtilidadesXml.leerDocumentoXml(RAIZ + File.separator + FICHERO_VEHICULOS);
+        procesarDocumentoXml(vehiculosXml);
     }
     private void procesarDocumentoXml(Document documentoXml) {
         Objects.requireNonNull(documentoXml, "El documento xml de vehículos no puede ser nulo.");
-        UtilidadesXml.leerDocumentoXml(RAIZ + File.separator + FICHERO_VEHICULOS);
+        NodeList vehiculos = documentoXml.getElementsByTagName(VEHICULO);
+        for (int i = 0 ; i < vehiculos.getLength() ; i++) {
+            Node vehiculo = vehiculos.item(i);
+            if (vehiculo.getNodeType() == Node.ELEMENT_NODE) {
+                try {
+                    insertar(getVehiculo((Element) vehiculo));
+                } catch (OperationNotSupportedException e) {
+                    System.out.println("kkk");
+                }
+            }
+        }
     }
 
     public List<Vehiculo> get() {
@@ -63,7 +76,11 @@ public class Vehiculos implements IVehiculos {
         return new Vehiculo(marca, modelo, matricula);
     }
     public void terminar() {
-
+        Document vehiculoXml = UtilidadesXml.leerDocumentoXml(RAIZ + File.separator + FICHERO_VEHICULOS);
+        for (Vehiculo vehiculo : coleccionVehiculos) {
+            Element elementoVehiculo = getElement(vehiculoXml, vehiculo);
+            vehiculoXml.appendChild(elementoVehiculo);
+        }
     }
     private Document crearDocumentoXml() {
         DocumentBuilder constructor = UtilidadesXml.crearConstructorDocumentoXml();
