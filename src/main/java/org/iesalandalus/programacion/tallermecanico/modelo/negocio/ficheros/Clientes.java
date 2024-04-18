@@ -28,20 +28,23 @@ public class Clientes implements IClientes {
     public Clientes() {
         coleccionClientes = new ArrayList<>();
     }
+
     static Clientes getInstancia() {
         if (instancia == null) {
             instancia = new Clientes();
         }
         return instancia;
     }
+
     public void comenzar() {
         Document clienteXML = UtilidadesXml.leerDocumentoXml(RAIZ + File.separator + FICHERO_CLIENTES);
         procesarDocumentoXml(clienteXML);
     }
-    private void procesarDocumentoXml(Document documentoXml){
+
+    private void procesarDocumentoXml(Document documentoXml) {
         Objects.requireNonNull(documentoXml, "El documento xml de clientes no puede ser nulo.");
         NodeList clientes = documentoXml.getElementsByTagName(CLIENTE);
-        for (int i = 0 ; i < clientes.getLength() ; i++) {
+        for (int i = 0; i < clientes.getLength(); i++) {
             Node cliente = clientes.item(i);
             if (cliente.getNodeType() == Node.ELEMENT_NODE) {
                 try {
@@ -52,6 +55,7 @@ public class Clientes implements IClientes {
             }
         }
     }
+
     private Cliente getCliente(Element element) {
         String nombre = element.getAttribute(NOMBRE);
         String dni = element.getAttribute(DNI);
@@ -73,9 +77,11 @@ public class Clientes implements IClientes {
         } */
         return new Cliente(nombre, dni, telefono);
     }
+
     public List<Cliente> get() {
         return coleccionClientes;
     }
+
     public void insertar(Cliente cliente) throws OperationNotSupportedException {
         Objects.requireNonNull(cliente, "No se puede insertar un cliente nulo.");
         if (coleccionClientes.contains(cliente)) {
@@ -83,7 +89,8 @@ public class Clientes implements IClientes {
         }
         coleccionClientes.add(cliente);
     }
-    private Document crearDocumentoXml(){
+
+    private Document crearDocumentoXml() {
         DocumentBuilder constructor = UtilidadesXml.crearConstructorDocumentoXml();
         Document documentoXml = null;
         if (constructor != null) {
@@ -91,6 +98,7 @@ public class Clientes implements IClientes {
         }
         return documentoXml;
     }
+
     public void terminar() {
         Document clienteXML = UtilidadesXml.leerDocumentoXml(RAIZ + File.separator + FICHERO_CLIENTES);
 
@@ -98,8 +106,8 @@ public class Clientes implements IClientes {
             Element elementoCliente = getElemento(clienteXML, cliente);
             clienteXML.appendChild(elementoCliente);
         }
-
     }
+
     private Element getElemento(Document documentoXml, Cliente cliente) {
         Objects.requireNonNull(documentoXml, "El documento xml de clientes no puede ser nulo.");
         Objects.requireNonNull(cliente, "El cliente no puede ser nulo.");
@@ -110,6 +118,7 @@ public class Clientes implements IClientes {
 
         return elementoCliente;
     }
+
     public boolean modificar(Cliente cliente, String nombre, String telefono) throws OperationNotSupportedException {
         Objects.requireNonNull(cliente, "No se puede modificar un cliente nulo.");
         boolean modificacion = false;
@@ -127,11 +136,13 @@ public class Clientes implements IClientes {
 
         return modificacion;
     }
+
     public Cliente buscar(Cliente cliente) {
         Objects.requireNonNull(cliente, "No se puede buscar un cliente nulo.");
         int indice = coleccionClientes.indexOf(cliente);
         return indice != -1 ? coleccionClientes.get(indice) : null;
     }
+
     public void borrar(Cliente cliente) throws OperationNotSupportedException {
         Objects.requireNonNull(cliente, "No se puede borrar un cliente nulo.");
         int indice = coleccionClientes.indexOf(cliente);
