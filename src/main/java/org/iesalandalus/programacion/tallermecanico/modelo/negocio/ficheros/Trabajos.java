@@ -4,6 +4,8 @@ import org.iesalandalus.programacion.tallermecanico.modelo.dominio.*;
 import org.iesalandalus.programacion.tallermecanico.modelo.negocio.ITrabajos;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import javax.naming.OperationNotSupportedException;
 import javax.xml.parsers.DocumentBuilder;
@@ -13,9 +15,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class Trabajos implements ITrabajos {
-    private static String FICHERO_TRABAJOS = "trabajos.xml";
+    private static String FICHERO_TRABAJOS = String.format("%s%s%s", "Datos", File.separator, "trabajos.xml");
     private static DateTimeFormatter FORMATO_FECHA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    private static String RAIZ = "Datos";
+    private static String RAIZ = "trabajos";
     private static String TRABAJO = "trabajo";
     private static String CLIENTE = "cliente";
     private static String VEHICULO = "vehiculo";
@@ -44,20 +46,70 @@ public class Trabajos implements ITrabajos {
     }
 
     public void comenzar() {
-
+        Document trabajoXml = UtilidadesXml.leerDocumentoXml(FICHERO_TRABAJOS);
+        System.out.println("El fichero de trabajos se ha leído correctamente.");
+        procesarDocumentoXML(trabajoXml);
     }
 
     @Override
     public void terminar() {
-
+        Document trabajoXML = crearDocumentoXml();
+        if (trabajoXML != null) {
+            trabajoXML.appendChild(trabajoXML.createElement(RAIZ));
+            for (Trabajo trabajo : coleccionTrabajos) {
+                Element elementoTrabajo = getElemento(trabajoXML, trabajo);
+                trabajoXML.getDocumentElement().appendChild(elementoTrabajo);
+            }
+        }
+        UtilidadesXml.escribirDocumentoXml(trabajoXML, FICHERO_TRABAJOS);
     }
 
     private void procesarDocumentoXML(Document documentoXML) {
         Objects.requireNonNull(documentoXML, "El documento XML no puede ser nulo.");
-        UtilidadesXml.leerDocumentoXml(RAIZ + File.separator + FICHERO_TRABAJOS);
+        NodeList trabajos = documentoXML.getElementsByTagName(TRABAJO);
+        for (int i = 0; i < trabajos.getLength(); i++) {
+            Element elementoTrabajo = (Element) trabajos.item(i);
+            if (elementoTrabajo.getNodeType() == Node.ELEMENT_NODE) {
+                try {
+                    insertar(getTrabajo(elementoTrabajo));
+                }  catch (OperationNotSupportedException | NullPointerException e) {
+                    System.out.println("ERROR: Al procesar el trabajo número: " + i + ", " + e.getMessage().toLowerCase());
+                }
+            }
+        }
+
     }
+
     private Trabajo getTrabajo(Element element) throws OperationNotSupportedException {
-        Document documentoXml = UtilidadesXml.leerDocumentoXml(RAIZ + File.separator + FICHERO_TRABAJOS);
+        Trabajo elementoTrabajo = null;
+        Cliente cliente = Clientes.getInstancia().buscar(Cliente.get(element.getAttribute(CLIENTE)));
+        Vehiculo vehiculo = Vehiculos.getInstancia().buscar(Vehiculo.get(element.getAttribute(VEHICULO)));
+        LocalDate fechaInicio = LocalDate.parse(element.getAttribute(FECHA_INICIO), FORMATO_FECHA);
+        LocalDate fechaFin = null;
+        int horas = 0;
+        float precioMaterial = 0;
+        if (element.hasAttribute(FECHA_FIN)) {
+            fechaFin = LocalDate.parse(element.getAttribute(FECHA_FIN), FORMATO_FECHA);
+        }
+        if (element.hasAttribute(HORAS)) {
+            horas = Integer.parseInt(element.getAttribute(HORAS));
+        }
+        if (element.getAttribute(TIPO).equals(REVISION)) {
+            elementoTrabajo = new Revision(cliente, vehiculo, fechaInicio);
+            elementoTrabajo.anadirHoras(horas);
+            elementoTrabajo.cerrar(fechaFin);
+        } else if (element.getAttribute(TIPO).equals(MECANICO)) {
+            elementoTrabajo = new Mecanico(cliente,vehiculo,fechaInicio);
+            elementoTrabajo.anadirHoras(horas);
+            if (element.hasAttribute(PRECIO_MATERIAL)) {
+                precioMaterial = Float.parseFloat(element.getAttribute(PRECIO_MATERIAL));
+                ((Mecanico) elementoTrabajo).anadirPrecioMaterial(precioMaterial);
+            }
+            elementoTrabajo.cerrar(fechaFin);
+        }
+
+
+        /* Document documentoXml = UtilidadesXml.leerDocumentoXml(FICHERO_TRABAJOS);
         Trabajo elementoTrabajo = null;
         Cliente cliente = null;
         Vehiculo vehiculo = null;
@@ -86,11 +138,11 @@ public class Trabajos implements ITrabajos {
                 fechaFin = LocalDate.parse(element.getAttribute(FECHA_FIN), FORMATO_FECHA);
                 elementoTrabajo.cerrar(fechaFin);
             }
-        }
+        } */
         return elementoTrabajo;
     }
 
-    private Document crearDocumentoXml(){
+    private Document crearDocumentoXml() {
         DocumentBuilder constructor = UtilidadesXml.crearConstructorDocumentoXml();
         Document documentoXml = null;
         if (constructor != null) {
@@ -104,33 +156,31 @@ public class Trabajos implements ITrabajos {
         Element elementoTrabajo = documentoXml.createElement("trabajo");
         elementoTrabajo.setAttribute(CLIENTE, trabajo.getCliente().getDni());
         elementoTrabajo.setAttribute(VEHICULO, trabajo.getVehiculo().matricula());
-        elementoTrabajo.setAttribute(FECHA_INICIO, trabajo.getFechaInicio().toString());
+        elementoTrabajo.setAttribute(FECHA_INICIO, trabajo.getFechaInicio().format(FORMATO_FECHA));
         if (trabajo.getHoras() != 0) {
             elementoTrabajo.setAttribute(HORAS, Integer.toString(trabajo.getHoras()));
         }
         if (trabajo.estaCerrado()) {
-            elementoTrabajo.setAttribute(FECHA_FIN, trabajo.getFechaFin().toString());
+            elementoTrabajo.setAttribute(FECHA_FIN, trabajo.getFechaFin().format(FORMATO_FECHA));
         }
         if (TipoTrabajo.get(trabajo) != null) {
             elementoTrabajo.setAttribute(TIPO, TipoTrabajo.get(trabajo).toString());
         }
         if (trabajo instanceof Mecanico mecanico) {
             if (mecanico.getPrecioMaterial() != 0) {
-                String cadenaPrecio = Float.toString(mecanico.getPrecioMaterial());
-                String.format(Locale.US, "%f", cadenaPrecio);
-                elementoTrabajo.setAttribute(PRECIO_MATERIAL, cadenaPrecio);
+                elementoTrabajo.setAttribute(PRECIO_MATERIAL, String.valueOf(mecanico.getPrecioMaterial()).replace(',', '.'));
             }
         }
         return elementoTrabajo;
     }
-
-    public Map<TipoTrabajo, Integer> getEstadisticasMensuales (LocalDate mes) {
+    public Map<TipoTrabajo, Integer> getEstadisticasMensuales(LocalDate mes) {
+        Objects.requireNonNull(mes, "El mes no puede ser nulo.");
         Map<TipoTrabajo, Integer> estadisticaMensual = inicializarEstadistica();
         int trabajosMecanicos = 0;
         int trabajosRevisiones = 0;
         for (Trabajo trabajo : coleccionTrabajos) {
             if (trabajo instanceof Mecanico) {
-                if (trabajo.getFechaInicio().getMonth().equals(mes.getMonth())){
+                if (trabajo.getFechaInicio().getMonth().equals(mes.getMonth())) {
                     trabajosMecanicos++;
                 }
             } else if (trabajo instanceof Revision) {
@@ -143,6 +193,7 @@ public class Trabajos implements ITrabajos {
         estadisticaMensual.replace(TipoTrabajo.REVISION, trabajosRevisiones);
         return estadisticaMensual;
     }
+
     private Map<TipoTrabajo, Integer> inicializarEstadistica() {
         Map<TipoTrabajo, Integer> estadisticas = new HashMap<>();
         int trabajosMecanicos = 0;
@@ -168,6 +219,7 @@ public class Trabajos implements ITrabajos {
         }
         return revisionesClientes;
     }
+
     @Override
     public List<Trabajo> get(Vehiculo vehiculo) {
         List<Trabajo> vehiculos = new ArrayList<>();
@@ -178,12 +230,14 @@ public class Trabajos implements ITrabajos {
         }
         return vehiculos;
     }
+
     @Override
     public void insertar(Trabajo trabajo) throws OperationNotSupportedException {
         Objects.requireNonNull(trabajo, "No se puede insertar un trabajo nulo.");
         comprobarTrabajo(trabajo.getCliente(), trabajo.getVehiculo(), trabajo.getFechaInicio());
         coleccionTrabajos.add(trabajo);
     }
+
     private void comprobarTrabajo(Cliente cliente, Vehiculo vehiculo, LocalDate fechaTrabajo) throws OperationNotSupportedException {
         for (Trabajo trabajo : coleccionTrabajos) {
             if (trabajo.getCliente().equals(cliente)) {
@@ -196,22 +250,23 @@ public class Trabajos implements ITrabajos {
             }
             if (trabajo.getVehiculo().equals(vehiculo)) {
                 if (!trabajo.estaCerrado()) {
-                    throw new OperationNotSupportedException("El vehÃ­culo estÃ¡ actualmente en el taller.");
+                    throw new OperationNotSupportedException("El vehículo está actualmente en el taller.");
                 }
                 if (trabajo.estaCerrado() && (!fechaTrabajo.isAfter(trabajo.getFechaFin()))) {
-                    throw new OperationNotSupportedException("El vehÃ­culo tiene otro trabajo posterior.");
+                    throw new OperationNotSupportedException("El vehículo tiene otro trabajo posterior.");
                 }
             }
         }
     }
+
     private Trabajo getTrabajo(Trabajo trabajo) {
-        Objects.requireNonNull(trabajo, "La revisiÃ³n no puede ser nula.");
+        Objects.requireNonNull(trabajo, "La revisión no puede ser nula.");
         int indice = coleccionTrabajos.indexOf(trabajo);
         return indice == -1 ? null : coleccionTrabajos.get(indice);
     }
 
     private Trabajo getTrabajoAbierto(Vehiculo vehiculo) throws OperationNotSupportedException {
-        Objects.requireNonNull(vehiculo, "El vehÃ­culo no puede ser nulo.");
+        Objects.requireNonNull(vehiculo, "El vehículo no puede ser nulo.");
         Trabajo trabajoEncontrado = null;
         Iterator<Trabajo> iteradorTrabajos = coleccionTrabajos.iterator();
         while (iteradorTrabajos.hasNext() && trabajoEncontrado == null) {
@@ -221,47 +276,51 @@ public class Trabajos implements ITrabajos {
             }
         }
         if (trabajoEncontrado == null) {
-            throw new OperationNotSupportedException("No existe ningÃºn trabajo abierto para dicho vehÃ­culo.");
+            throw new OperationNotSupportedException("No existe ningún trabajo abierto para dicho vehículo.");
         }
         return trabajoEncontrado;
     }
 
     @Override
     public void anadirHoras(Trabajo trabajo, int horas) throws OperationNotSupportedException {
-        Objects.requireNonNull(trabajo, "No puedo aÃ±adir horas a un trabajo nulo.");
+        Objects.requireNonNull(trabajo, "No puedo añadir horas a un trabajo nulo.");
         Trabajo trabajoEncontrado = getTrabajoAbierto(trabajo.getVehiculo());
         trabajoEncontrado.anadirHoras(horas);
     }
+
     @Override
     public void anadirPrecioMaterial(Trabajo trabajo, float precioMaterial) throws OperationNotSupportedException {
-        Objects.requireNonNull(trabajo, "No puedo aÃ±adir precio del material a un trabajo nulo.");
+        Objects.requireNonNull(trabajo, "No puedo añadir precio del material a un trabajo nulo.");
         if (getTrabajoAbierto(trabajo.getVehiculo()) == null) {
-            throw new OperationNotSupportedException("No existe ningÃºn trabajo abierto para dicho vehÃ­culo.");
+            throw new OperationNotSupportedException("No existe ningún trabajo abierto para dicho vehículo.");
         }
         if (trabajo instanceof Revision) {
-            throw new OperationNotSupportedException("No se puede aÃ±adir precio al material para este tipo de trabajos.");
+            throw new OperationNotSupportedException("No se puede añadir precio al material para este tipo de trabajos.");
         }
         ((Mecanico) trabajo).anadirPrecioMaterial(precioMaterial);
     }
+
     @Override
     public void cerrar(Trabajo trabajo, LocalDate fechaFin) throws OperationNotSupportedException {
         Objects.requireNonNull(trabajo, "No puedo cerrar un trabajo nulo.");
         if (getTrabajoAbierto(trabajo.getVehiculo()) == null) {
-            throw new OperationNotSupportedException("No existe ningÃºn trabajo abierto para dicho vehÃ­culo.");
+            throw new OperationNotSupportedException("No existe ningún trabajo abierto para dicho vehículo.");
         }
         trabajo.cerrar(fechaFin);
     }
+
     @Override
     public Trabajo buscar(Trabajo trabajo) {
         Objects.requireNonNull(trabajo, "No se puede buscar un trabajo nulo.");
         int indice = coleccionTrabajos.indexOf(trabajo);
         return (indice == -1) ? null : coleccionTrabajos.get(indice);
     }
+
     @Override
     public void borrar(Trabajo trabajo) throws OperationNotSupportedException {
         Objects.requireNonNull(trabajo, "No se puede borrar un trabajo nulo.");
         if (!coleccionTrabajos.contains(trabajo)) {
-            throw new OperationNotSupportedException("No existe ningÃºn trabajo igual.");
+            throw new OperationNotSupportedException("No existe ningún trabajo igual.");
         }
         coleccionTrabajos.remove(trabajo);
     }
