@@ -11,12 +11,13 @@ import javax.naming.OperationNotSupportedException;
 import javax.xml.parsers.DocumentBuilder;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
 public class Clientes implements IClientes {
-    private static final String FICHERO_CLIENTES = "clientes.xml";
-    private static final String RAIZ = "Datos";
+    private static final String FICHERO_CLIENTES = String.format("%s%s%s", "Datos", File.separator, "clientes.xml");
+    private static final String RAIZ = "clientes";
     private static final String CLIENTE = "cliente";
     private static final String NOMBRE = "nombre";
     private static final String DNI = "dni";
@@ -37,7 +38,8 @@ public class Clientes implements IClientes {
     }
 
     public void comenzar() {
-        Document clienteXML = UtilidadesXml.leerDocumentoXml(RAIZ + File.separator + FICHERO_CLIENTES);
+        Document clienteXML = UtilidadesXml.leerDocumentoXml(FICHERO_CLIENTES);
+        System.out.println("El fichero clientes se ha leído correctamente.");
         procesarDocumentoXml(clienteXML);
     }
 
@@ -45,10 +47,10 @@ public class Clientes implements IClientes {
         Objects.requireNonNull(documentoXml, "El documento xml de clientes no puede ser nulo.");
         NodeList clientes = documentoXml.getElementsByTagName(CLIENTE);
         for (int i = 0; i < clientes.getLength(); i++) {
-            Node cliente = clientes.item(i);
+            Element cliente = (Element) clientes.item(i);
             if (cliente.getNodeType() == Node.ELEMENT_NODE) {
                 try {
-                    insertar(getCliente((Element) cliente));
+                    insertar(getCliente(cliente));
                 } catch (OperationNotSupportedException e) {
                     System.out.println("kkk");
                 }
@@ -79,7 +81,7 @@ public class Clientes implements IClientes {
     }
 
     public List<Cliente> get() {
-        return coleccionClientes;
+        return new ArrayList<>(coleccionClientes);
     }
 
     public void insertar(Cliente cliente) throws OperationNotSupportedException {
@@ -100,12 +102,15 @@ public class Clientes implements IClientes {
     }
 
     public void terminar() {
-        Document clienteXML = UtilidadesXml.leerDocumentoXml(RAIZ + File.separator + FICHERO_CLIENTES);
-
-        for (Cliente cliente : coleccionClientes) {
-            Element elementoCliente = getElemento(clienteXML, cliente);
-            clienteXML.appendChild(elementoCliente);
+        Document clienteXML = crearDocumentoXml();
+        if (clienteXML != null) {
+            clienteXML.appendChild(clienteXML.createElement(RAIZ));
+            for (Cliente cliente : coleccionClientes) {
+                Element elementoCliente = getElemento(clienteXML, cliente);
+                clienteXML.getDocumentElement().appendChild(elementoCliente);
+            }
         }
+        UtilidadesXml.escribirDocumentoXml(clienteXML, FICHERO_CLIENTES);
     }
 
     private Element getElemento(Document documentoXml, Cliente cliente) {

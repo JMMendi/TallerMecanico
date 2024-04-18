@@ -15,8 +15,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class Vehiculos implements IVehiculos {
-    private static final String FICHERO_VEHICULOS = "vehiculos.xml";
-    private static final String RAIZ = "Datos";
+    private static final String FICHERO_VEHICULOS = String.format("%s%s%s", "Datos", File.separator, "vehiculos.xml");
+    private static final String RAIZ = "vehiculos";
     private static final String VEHICULO = "vehiculo";
     private static final String MARCA = "marca";
     private static final String MODELO = "modelo";
@@ -35,17 +35,18 @@ public class Vehiculos implements IVehiculos {
         return instancia;
     }
     public void comenzar() {
-        Document vehiculosXml = UtilidadesXml.leerDocumentoXml(RAIZ + File.separator + FICHERO_VEHICULOS);
+        Document vehiculosXml = UtilidadesXml.leerDocumentoXml(FICHERO_VEHICULOS);
+        System.out.println("Fichero vehículos leído correctamente.");
         procesarDocumentoXml(vehiculosXml);
     }
     private void procesarDocumentoXml(Document documentoXml) {
         Objects.requireNonNull(documentoXml, "El documento xml de vehículos no puede ser nulo.");
         NodeList vehiculos = documentoXml.getElementsByTagName(VEHICULO);
         for (int i = 0 ; i < vehiculos.getLength() ; i++) {
-            Node vehiculo = vehiculos.item(i);
+            Element vehiculo = (Element) vehiculos.item(i);
             if (vehiculo.getNodeType() == Node.ELEMENT_NODE) {
                 try {
-                    insertar(getVehiculo((Element) vehiculo));
+                    insertar(getVehiculo(vehiculo));
                 } catch (OperationNotSupportedException e) {
                     System.out.println("kkk");
                 }
@@ -57,7 +58,10 @@ public class Vehiculos implements IVehiculos {
         return new ArrayList<>(coleccionVehiculos);
     }
     private Vehiculo getVehiculo(Element elemento) {
-        Document documentoXml = UtilidadesXml.leerDocumentoXml(RAIZ + File.separator + FICHERO_VEHICULOS);
+        String marca = elemento.getAttribute(MARCA);
+        String modelo = elemento.getAttribute(MODELO);
+        String matricula = elemento.getAttribute(MATRICULA);
+        /* Document documentoXml = UtilidadesXml.leerDocumentoXml(FICHERO_VEHICULOS);
         String marca = null;
         String modelo = null;
         String matricula = null;
@@ -72,15 +76,19 @@ public class Vehiculos implements IVehiculos {
             if (elemento.hasAttribute(MATRICULA)) {
                 matricula = elemento.getAttribute(MATRICULA);
             }
-        }
+        } */
         return new Vehiculo(marca, modelo, matricula);
     }
     public void terminar() {
-        Document vehiculoXml = UtilidadesXml.leerDocumentoXml(RAIZ + File.separator + FICHERO_VEHICULOS);
-        for (Vehiculo vehiculo : coleccionVehiculos) {
-            Element elementoVehiculo = getElement(vehiculoXml, vehiculo);
-            vehiculoXml.appendChild(elementoVehiculo);
+        Document vehiculoXml = crearDocumentoXml();
+        if (vehiculoXml != null) {
+            vehiculoXml.appendChild(vehiculoXml.createElement(RAIZ));
+            for (Vehiculo vehiculo : coleccionVehiculos) {
+                Element elementoVehiculo = getElement(vehiculoXml, vehiculo);
+                vehiculoXml.getDocumentElement().appendChild(elementoVehiculo);
+            }
         }
+        UtilidadesXml.escribirDocumentoXml(vehiculoXml, FICHERO_VEHICULOS);
     }
     private Document crearDocumentoXml() {
         DocumentBuilder constructor = UtilidadesXml.crearConstructorDocumentoXml();
