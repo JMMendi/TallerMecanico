@@ -15,8 +15,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class Clientes implements IClientes {
-    private static final String FICHERO_CLIENTES = String.format("%s%s%s", "Datos", File.separator, "ficheroClientes.xml");
-    private static final String RAIZ = "DATOS";
+    private static final String FICHERO_CLIENTES = "clientes.xml";
+    private static final String RAIZ = "Datos";
     private static final String CLIENTE = "cliente";
     private static final String NOMBRE = "nombre";
     private static final String DNI = "dni";
@@ -35,13 +35,28 @@ public class Clientes implements IClientes {
         return instancia;
     }
     public void comenzar() {
+        Document clienteXML = UtilidadesXml.leerDocumentoXml(RAIZ + File.separator + FICHERO_CLIENTES);
+        procesarDocumentoXml(clienteXML);
     }
     private void procesarDocumentoXml(Document documentoXml){
         Objects.requireNonNull(documentoXml, "El documento xml de clientes no puede ser nulo.");
-        UtilidadesXml.leerDocumentoXml(FICHERO_CLIENTES);
+        NodeList clientes = documentoXml.getElementsByTagName(CLIENTE);
+        for (int i = 0 ; i < clientes.getLength() ; i++) {
+            Node cliente = clientes.item(i);
+            if (cliente.getNodeType() == Node.ELEMENT_NODE) {
+                try {
+                    insertar(getCliente((Element) cliente));
+                } catch (OperationNotSupportedException e) {
+                    System.out.println("kkk");
+                }
+            }
+        }
     }
     private Cliente getCliente(Element element) {
-        Document documentoXml = UtilidadesXml.leerDocumentoXml(FICHERO_CLIENTES);
+        String nombre = element.getAttribute(NOMBRE);
+        String dni = element.getAttribute(DNI);
+        String telefono = element.getAttribute(TELEFONO);
+        /* Document documentoXml = UtilidadesXml.leerDocumentoXml(RAIZ + File.separator + FICHERO_CLIENTES);
         String dni = null;
         String nombre = null;
         String telefono = null;
@@ -55,7 +70,7 @@ public class Clientes implements IClientes {
             if (element.hasAttribute(TELEFONO)) {
                 telefono = element.getAttribute(TELEFONO);
             }
-        }
+        } */
         return new Cliente(nombre, dni, telefono);
     }
     public List<Cliente> get() {
@@ -77,6 +92,12 @@ public class Clientes implements IClientes {
         return documentoXml;
     }
     public void terminar() {
+        Document clienteXML = UtilidadesXml.leerDocumentoXml(RAIZ + File.separator + FICHERO_CLIENTES);
+
+        for (Cliente cliente : coleccionClientes) {
+            Element elementoCliente = getElemento(clienteXML, cliente);
+            clienteXML.appendChild(elementoCliente);
+        }
 
     }
     private Element getElemento(Document documentoXml, Cliente cliente) {

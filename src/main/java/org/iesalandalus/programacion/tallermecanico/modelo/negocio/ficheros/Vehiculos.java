@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class Vehiculos implements IVehiculos {
-    private static final String FICHERO_VEHICULOS = String.format("%s%s%s", "Datos", File.separator, "ficheroVehiculos.xml");
+    private static final String FICHERO_VEHICULOS = "vehiculos.xml";
     private static final String RAIZ = "Datos";
     private static final String VEHICULO = "vehiculo";
     private static final String MARCA = "marca";
@@ -23,7 +23,7 @@ public class Vehiculos implements IVehiculos {
     static Vehiculos instancia;
     private List<Vehiculo> coleccionVehiculos;
 
-    public Vehiculos() {
+    private Vehiculos() {
         coleccionVehiculos = new ArrayList<>();
     }
     static Vehiculos getInstancia() {
@@ -37,14 +37,14 @@ public class Vehiculos implements IVehiculos {
     }
     private void procesarDocumentoXml(Document documentoXml) {
         Objects.requireNonNull(documentoXml, "El documento xml de vehículos no puede ser nulo.");
-        UtilidadesXml.leerDocumentoXml(FICHERO_VEHICULOS);
+        UtilidadesXml.leerDocumentoXml(RAIZ + File.separator + FICHERO_VEHICULOS);
     }
 
     public List<Vehiculo> get() {
         return new ArrayList<>(coleccionVehiculos);
     }
     private Vehiculo getVehiculo(Element elemento) {
-        Document documentoXml = UtilidadesXml.leerDocumentoXml(FICHERO_VEHICULOS);
+        Document documentoXml = UtilidadesXml.leerDocumentoXml(RAIZ + File.separator + FICHERO_VEHICULOS);
         String marca = null;
         String modelo = null;
         String matricula = null;

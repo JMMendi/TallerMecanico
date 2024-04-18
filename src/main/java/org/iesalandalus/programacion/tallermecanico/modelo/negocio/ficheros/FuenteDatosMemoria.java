@@ -5,14 +5,14 @@ import org.iesalandalus.programacion.tallermecanico.modelo.negocio.*;
 public class FuenteDatosMemoria implements IFuenteDatos {
     @Override
     public IClientes crearClientes() {
-        return new Clientes();
+        return Clientes.getInstancia();
     }
     @Override
     public IVehiculos crearVehiculos() {
-        return new Vehiculos();
+        return Vehiculos.getInstancia();
     }
     @Override
     public ITrabajos crearTrabajos() {
-        return new Trabajos();
+        return Trabajos.getInstancia();
     }
 }

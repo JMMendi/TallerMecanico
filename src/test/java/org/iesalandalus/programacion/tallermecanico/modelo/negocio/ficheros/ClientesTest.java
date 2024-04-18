@@ -80,7 +80,7 @@ class ClientesTest {
     void borrarClienteNoExistenteLanzaExcepcion() {
         assertDoesNotThrow(() -> clientes.insertar(cliente1));
         OperationNotSupportedException onse = assertThrows(OperationNotSupportedException.class, () -> clientes.borrar(cliente2));
-        assertEquals("No existe ningÃºn cliente con ese DNI.", onse.getMessage());
+        assertEquals("No existe ningún cliente con ese DNI.", onse.getMessage());
     }
 
     @Test
@@ -144,7 +144,7 @@ class ClientesTest {
     @Test
     void modificarClienteNoExistenteNombreValidoTelefonoValidoLanzaExcepcion() {
         OperationNotSupportedException onse = assertThrows(OperationNotSupportedException.class, () -> clientes.modificar(cliente1, "Patricio Estrella", "950123456"));
-        assertEquals("No existe ningÃºn cliente con ese DNI.", onse.getMessage());
+        assertEquals("No existe ningún cliente con ese DNI.", onse.getMessage());
     }
 
     @Test

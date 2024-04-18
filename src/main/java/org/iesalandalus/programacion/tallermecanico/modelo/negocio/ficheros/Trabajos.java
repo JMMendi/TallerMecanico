@@ -13,9 +13,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class Trabajos implements ITrabajos {
-    private static String FICHERO_TRABAJOS = String.format("%s%s%s", "Datos", File.separator, "ficheroTrabajos.txt");
+    private static String FICHERO_TRABAJOS = "trabajos.xml";
     private static DateTimeFormatter FORMATO_FECHA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    private static String RAIZ = String.format("%s%s%s", "Datos", File.separator, "ficheroTrabajos.txt");
+    private static String RAIZ = "Datos";
     private static String TRABAJO = "trabajo";
     private static String CLIENTE = "cliente";
     private static String VEHICULO = "vehiculo";
@@ -54,10 +54,10 @@ public class Trabajos implements ITrabajos {
 
     private void procesarDocumentoXML(Document documentoXML) {
         Objects.requireNonNull(documentoXML, "El documento XML no puede ser nulo.");
-        UtilidadesXml.leerDocumentoXml(FICHERO_TRABAJOS);
+        UtilidadesXml.leerDocumentoXml(RAIZ + File.separator + FICHERO_TRABAJOS);
     }
     private Trabajo getTrabajo(Element element) throws OperationNotSupportedException {
-        Document documentoXml = UtilidadesXml.leerDocumentoXml(FICHERO_TRABAJOS);
+        Document documentoXml = UtilidadesXml.leerDocumentoXml(RAIZ + File.separator + FICHERO_TRABAJOS);
         Trabajo elementoTrabajo = null;
         Cliente cliente = null;
         Vehiculo vehiculo = null;

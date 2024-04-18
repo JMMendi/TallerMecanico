@@ -5,7 +5,9 @@ public enum TipoTrabajo {
     REVISION("Revisión");
 
     String nombre;
-    TipoTrabajo(String nombre){}
+    TipoTrabajo(String nombre){
+        this.nombre = nombre;
+    }
 
     public static TipoTrabajo get(Trabajo trabajo) {
         TipoTrabajo tipo = null;

@@ -12,15 +12,10 @@ import javax.naming.OperationNotSupportedException;
 import java.util.Objects;
 
 public class Controlador implements IControlador {
-    private static FabricaModelo fabricaModelo;
-    private static FabricaFuenteDatos fabricaFuenteDatos;
-    private static FabricaVista fabricaVista;
-    private static Modelo modelo;
-    private static Vista vista;
+    private Vista vista;
+    private Modelo modelo;
 
-    public Controlador(Modelo modelo, Vista vista) {
-        Objects.requireNonNull(modelo, "ERROR: El modelo no puede ser nulo.");
-        Objects.requireNonNull(vista, "ERROR: La vista no puede ser nula.");
+    public Controlador(FabricaModelo fabricaModelo, FabricaFuenteDatos fabricaFuenteDatos, FabricaVista fabricaVista) {
         modelo = fabricaModelo.crear(fabricaFuenteDatos);
         vista = fabricaVista.crear();
         vista.getGestorEventos().subscribir(this, Evento.values());
@@ -30,7 +25,6 @@ public class Controlador implements IControlador {
     public void comenzar() throws OperationNotSupportedException {
         modelo.comenzar();
         vista.comenzar();
-
     }
 
     @Override
