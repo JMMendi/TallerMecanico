@@ -1,14 +1,15 @@
 package org.iesalandalus.programacion.tallermecanico.vista.texto;
 
 import org.iesalandalus.programacion.tallermecanico.modelo.dominio.*;
+import org.iesalandalus.programacion.tallermecanico.vista.Vista;
 import org.iesalandalus.programacion.tallermecanico.vista.eventos.Evento;
 import org.iesalandalus.programacion.tallermecanico.vista.eventos.GestorEventos;
-import org.iesalandalus.programacion.utilidades.Entrada;
 
 import javax.naming.OperationNotSupportedException;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 
 public class VistaTexto implements Vista {
     private final GestorEventos gestorEventos = new GestorEventos(Evento.values());
@@ -77,6 +78,11 @@ public class VistaTexto implements Vista {
     }
 
     @Override
+    public LocalDate leerMes() {
+        return leerFechaCierre();
+    }
+
+    @Override
     public Trabajo leerRevision() {
         Cliente cliente = leerClienteDni();
         Vehiculo vehiculo = leerVehiculoMatricula();
@@ -137,6 +143,7 @@ public class VistaTexto implements Vista {
     @Override
     public void mostrarClientes(List<Cliente> clientes) { //Mirar si están vacios o no. Si no lo estan mostrar, sino dar error
         if (!clientes.isEmpty()) {
+            clientes.sort(Comparator.comparing(Cliente::getNombre).thenComparing(Cliente::getDni));
             System.out.printf("%s%n", clientes);
         } else {
             throw new IllegalArgumentException("La lista de Clientes está vacía.");
@@ -145,6 +152,7 @@ public class VistaTexto implements Vista {
     @Override
     public void mostrarVehiculos(List<Vehiculo> vehiculos) {
         if (!vehiculos.isEmpty()) {
+            vehiculos.sort(Comparator.comparing(Vehiculo::marca).thenComparing(Vehiculo::modelo).thenComparing(Vehiculo::matricula));
             System.out.printf("%s%n", vehiculos);
         } else {
             throw new IllegalArgumentException("La lista de Vehículos está vacía.");
@@ -153,10 +161,16 @@ public class VistaTexto implements Vista {
     @Override
     public void mostrarTrabajos(List<Trabajo> trabajos) {
         if (!trabajos.isEmpty()) {
+            trabajos.sort(Comparator.comparing(Trabajo::getFechaInicio)); // si se intenta Trabajo::GetCliente no le gusta.
             System.out.printf("%s%n", trabajos);
         } else {
             throw new IllegalArgumentException("La lista de Trabajos está vacía.");
         }
+    }
+
+    @Override
+    public void mostrarEstadisticasMensuales(Map<TipoTrabajo, Integer> estadistica) {
+        System.out.println(estadistica);
     }
 
     @Override

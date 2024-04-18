@@ -5,7 +5,7 @@ import org.iesalandalus.programacion.tallermecanico.modelo.Modelo;
 import org.iesalandalus.programacion.tallermecanico.modelo.negocio.FabricaFuenteDatos;
 import org.iesalandalus.programacion.tallermecanico.vista.FabricaVista;
 import org.iesalandalus.programacion.tallermecanico.vista.eventos.Evento;
-import org.iesalandalus.programacion.tallermecanico.vista.texto.Vista;
+import org.iesalandalus.programacion.tallermecanico.vista.Vista;
 
 
 import javax.naming.OperationNotSupportedException;
@@ -83,6 +83,7 @@ public class Controlador implements IControlador {
                 case LISTAR_TRABAJOS_CLIENTE ->
                         vista.mostrarTrabajos(modelo.getTrabajos(vista.leerClienteDni())); // vista.mostrarTrabajos
                 case LISTAR_TRABAJOS_VEHICULO -> vista.mostrarTrabajos(modelo.getTrabajos(vista.leerVehiculo()));
+                case MOSTRAR_ESTADISTICAS_MENSUALES -> vista.mostrarEstadisticasMensuales(modelo.getEstadisticasMensuales(vista.leerMes()));
                 case SALIR -> modelo.terminar();
                 default -> System.out.print("Error, tiene que escoger de entre las opciones válidas.");
             }

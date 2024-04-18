@@ -1,13 +1,13 @@
-package org.iesalandalus.programacion.tallermecanico.vista.texto;
+package org.iesalandalus.programacion.tallermecanico.vista;
 
 import org.iesalandalus.programacion.tallermecanico.modelo.dominio.*;
 import org.iesalandalus.programacion.tallermecanico.vista.eventos.Evento;
 import org.iesalandalus.programacion.tallermecanico.vista.eventos.GestorEventos;
-import org.iesalandalus.programacion.utilidades.Entrada;
 
 import javax.naming.OperationNotSupportedException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 public interface Vista {
     public Cliente leerCliente();
@@ -34,6 +34,8 @@ public interface Vista {
 
     public Trabajo leerTrabajoVehiculo();
 
+    public LocalDate leerMes();
+
     GestorEventos getGestorEventos();
 
     void comenzar() throws OperationNotSupportedException;
@@ -57,5 +59,9 @@ public interface Vista {
     void mostrarTrabajosCliente(List<Trabajo> trabajosCliente);
 
     void mostrarTrabajosVehiculo(List<Trabajo> trabajosVehiculo);
+
+    void mostrarEstadisticasMensuales(Map<TipoTrabajo, Integer> estadistica);
+
+
 }
 

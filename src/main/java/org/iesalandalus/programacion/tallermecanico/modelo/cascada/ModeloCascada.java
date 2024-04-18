@@ -9,10 +9,7 @@ import org.iesalandalus.programacion.tallermecanico.modelo.negocio.IVehiculos;
 
 import javax.naming.OperationNotSupportedException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class ModeloCascada implements Modelo {
     private ITrabajos trabajos;
@@ -28,11 +25,15 @@ public class ModeloCascada implements Modelo {
 
     @Override
     public void comenzar() {
-        System.out.print("El Modelo acaba de iniciarse. ");
+        clientes.comenzar();
+        vehiculos.comenzar();
+        trabajos.comenzar();
     }
     @Override
     public void terminar() {
-        System.out.print("El modelo ha terminado de ejecutarse.");
+        clientes.terminar();
+        vehiculos.terminar();
+        trabajos.terminar();
     }
     @Override
     public void insertar(Cliente cliente) throws OperationNotSupportedException {
