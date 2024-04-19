@@ -39,8 +39,8 @@ public class Clientes implements IClientes {
 
     public void comenzar() {
         Document clienteXML = UtilidadesXml.leerDocumentoXml(FICHERO_CLIENTES);
-        System.out.println("El fichero clientes se ha leído correctamente.");
         procesarDocumentoXml(clienteXML);
+        System.out.println("El fichero clientes se ha leído correctamente.");
     }
 
     private void procesarDocumentoXml(Document documentoXml) {
@@ -51,8 +51,8 @@ public class Clientes implements IClientes {
             if (cliente.getNodeType() == Node.ELEMENT_NODE) {
                 try {
                     insertar(getCliente(cliente));
-                } catch (OperationNotSupportedException e) {
-                    System.out.println("kkk");
+                } catch (OperationNotSupportedException | IllegalArgumentException | NullPointerException e) {
+                    System.out.println("Error en el cliente " + i + " : " + e.getMessage());
                 }
             }
         }

@@ -161,8 +161,9 @@ public class VistaTexto implements Vista {
     @Override
     public void mostrarTrabajos(List<Trabajo> trabajos) {
         if (!trabajos.isEmpty()) {
-            trabajos.sort(Comparator.comparing(Trabajo::getFechaInicio)); // si se intenta Trabajo::GetCliente no le gusta.
-            System.out.printf("%s%n", trabajos);
+            Comparator comparadorCliente = Comparator.comparing(Cliente::getNombre).thenComparing(Cliente::getDni);
+            trabajos.sort(Comparator.comparing(Trabajo::getFechaInicio).thenComparing(Trabajo::getCliente, comparadorCliente));
+            System.out.println(trabajos);
         } else {
             throw new IllegalArgumentException("La lista de Trabajos está vacía.");
         }

@@ -36,8 +36,8 @@ public class Vehiculos implements IVehiculos {
     }
     public void comenzar() {
         Document vehiculosXml = UtilidadesXml.leerDocumentoXml(FICHERO_VEHICULOS);
-        System.out.println("Fichero vehículos leído correctamente.");
         procesarDocumentoXml(vehiculosXml);
+        System.out.println("Fichero vehículos leído correctamente.");
     }
     private void procesarDocumentoXml(Document documentoXml) {
         Objects.requireNonNull(documentoXml, "El documento xml de vehículos no puede ser nulo.");
@@ -47,8 +47,8 @@ public class Vehiculos implements IVehiculos {
             if (vehiculo.getNodeType() == Node.ELEMENT_NODE) {
                 try {
                     insertar(getVehiculo(vehiculo));
-                } catch (OperationNotSupportedException e) {
-                    System.out.println("kkk");
+                } catch (OperationNotSupportedException | IllegalArgumentException | NullPointerException e) {
+                    System.out.println("Error en el vehiculo" + i + " : " + e.getMessage());
                 }
             }
         }

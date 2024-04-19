@@ -41,8 +41,7 @@ public record Vehiculo(String marca, String modelo, String matricula) {
 
     public static Vehiculo get(String matricula) {
         Objects.requireNonNull(matricula, "La matrícula no puede ser nula.");
-        Vehiculo vehiculo = new Vehiculo("Seat", "Alpha", matricula);
-        return vehiculo;
+        return new Vehiculo("Seat", "Alpha", matricula);
     }
 
     @Override
