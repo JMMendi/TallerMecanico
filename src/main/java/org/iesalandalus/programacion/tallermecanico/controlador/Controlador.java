@@ -1,22 +1,23 @@
 package org.iesalandalus.programacion.tallermecanico.controlador;
 
+import org.iesalandalus.programacion.tallermecanico.modelo.FabricaModelo;
 import org.iesalandalus.programacion.tallermecanico.modelo.Modelo;
+import org.iesalandalus.programacion.tallermecanico.modelo.negocio.FabricaFuenteDatos;
+import org.iesalandalus.programacion.tallermecanico.vista.FabricaVista;
 import org.iesalandalus.programacion.tallermecanico.vista.eventos.Evento;
-import org.iesalandalus.programacion.tallermecanico.vista.texto.Vista;
+import org.iesalandalus.programacion.tallermecanico.vista.Vista;
 
 
 import javax.naming.OperationNotSupportedException;
 import java.util.Objects;
 
 public class Controlador implements IControlador {
-    private final Vista vista;
-    private final Modelo modelo;
+    private Vista vista;
+    private Modelo modelo;
 
-    public Controlador(Modelo modelo, Vista vista) {
-        Objects.requireNonNull(modelo, "ERROR: El modelo no puede ser nulo.");
-        Objects.requireNonNull(vista, "ERROR: La vista no puede ser nula.");
-        this.modelo = modelo;
-        this.vista = vista;
+    public Controlador(FabricaModelo fabricaModelo, FabricaFuenteDatos fabricaFuenteDatos, FabricaVista fabricaVista) {
+        modelo = fabricaModelo.crear(fabricaFuenteDatos);
+        vista = fabricaVista.crear();
         vista.getGestorEventos().subscribir(this, Evento.values());
     }
 
@@ -24,7 +25,6 @@ public class Controlador implements IControlador {
     public void comenzar() throws OperationNotSupportedException {
         modelo.comenzar();
         vista.comenzar();
-
     }
 
     @Override
@@ -83,6 +83,7 @@ public class Controlador implements IControlador {
                 case LISTAR_TRABAJOS_CLIENTE ->
                         vista.mostrarTrabajos(modelo.getTrabajos(vista.leerClienteDni())); // vista.mostrarTrabajos
                 case LISTAR_TRABAJOS_VEHICULO -> vista.mostrarTrabajos(modelo.getTrabajos(vista.leerVehiculo()));
+                case MOSTRAR_ESTADISTICAS_MENSUALES -> vista.mostrarEstadisticasMensuales(modelo.getEstadisticasMensuales(vista.leerMes()));
                 case SALIR -> modelo.terminar();
                 default -> System.out.print("Error, tiene que escoger de entre las opciones válidas.");
             }

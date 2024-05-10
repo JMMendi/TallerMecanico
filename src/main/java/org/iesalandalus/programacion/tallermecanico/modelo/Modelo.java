@@ -1,12 +1,14 @@
 package org.iesalandalus.programacion.tallermecanico.modelo;
 
 import org.iesalandalus.programacion.tallermecanico.modelo.dominio.Cliente;
+import org.iesalandalus.programacion.tallermecanico.modelo.dominio.TipoTrabajo;
 import org.iesalandalus.programacion.tallermecanico.modelo.dominio.Trabajo;
 import org.iesalandalus.programacion.tallermecanico.modelo.dominio.Vehiculo;
 
 import javax.naming.OperationNotSupportedException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 public interface Modelo {
     void comenzar();
@@ -46,6 +48,8 @@ public interface Modelo {
     List<Trabajo> getTrabajos();
 
     List<Trabajo> getTrabajos(Cliente cliente);
+
+    public Map<TipoTrabajo, Integer> getEstadisticasMensuales (LocalDate mes);
 
     List<Trabajo> getTrabajos(Vehiculo vehiculo);
 }
