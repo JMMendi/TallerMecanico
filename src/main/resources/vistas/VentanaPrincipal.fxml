@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.VBox?>
 
 
-<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="173.0" prefWidth="381.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="173.0" prefWidth="381.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.iesalandalus.programacion.tallermecanico.vista.grafica.controladores.VentanaPrincipal">
    <children>
       <Button fx:id="btInsertarCliente" mnemonicParsing="false" onAction="#insertarCliente" text="Insertar Cliente" />
    </children>

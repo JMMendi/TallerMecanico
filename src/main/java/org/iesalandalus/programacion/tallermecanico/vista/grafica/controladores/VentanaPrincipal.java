@@ -11,11 +11,14 @@ import javax.naming.OperationNotSupportedException;
 
 public class VentanaPrincipal extends Controlador {
 
+
+
     @FXML
     private Button btInsertarCliente;
 
     @FXML
     void insertarCliente() throws OperationNotSupportedException {
+        //
         VistaGrafica.getInstancia().getGestorEventos().notificar(Evento.INSERTAR_CLIENTE);
 
     }
