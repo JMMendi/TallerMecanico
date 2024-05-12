@@ -10,31 +10,31 @@ import java.util.List;
 import java.util.Map;
 
 public interface Vista {
-    public Cliente leerCliente();
+    Cliente leerCliente();
 
-    public Cliente leerClienteDni();
+    Cliente leerClienteDni();
 
-    public String leerNuevoNombre();
+    String leerNuevoNombre();
 
-    public String leerNuevoTelefono();
+    String leerNuevoTelefono();
 
-    public Vehiculo leerVehiculo();
+    Vehiculo leerVehiculo();
 
-    public Vehiculo leerVehiculoMatricula();
+    Vehiculo leerVehiculoMatricula();
 
-    public Trabajo leerRevision();
+    Trabajo leerRevision();
 
-    public Trabajo leerMecanico();
+    Trabajo leerMecanico();
 
-    public int leerHoras();
+    int leerHoras();
 
-    public float leerPrecioMaterial();
+    float leerPrecioMaterial();
 
-    public LocalDate leerFechaCierre();
+    LocalDate leerFechaCierre();
 
-    public Trabajo leerTrabajoVehiculo();
+    Trabajo leerTrabajoVehiculo();
 
-    public LocalDate leerMes();
+    LocalDate leerMes();
 
     GestorEventos getGestorEventos();
 

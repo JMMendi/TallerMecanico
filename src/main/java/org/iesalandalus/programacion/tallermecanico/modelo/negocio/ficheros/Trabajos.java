@@ -15,19 +15,19 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class Trabajos implements ITrabajos {
-    private static String FICHERO_TRABAJOS = String.format("%s%s%s", "Datos", File.separator, "trabajos.xml");
-    private static DateTimeFormatter FORMATO_FECHA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    private static String RAIZ = "trabajos";
-    private static String TRABAJO = "trabajo";
-    private static String CLIENTE = "cliente";
-    private static String VEHICULO = "vehiculo";
-    private static String FECHA_INICIO = "fechaInicio";
-    private static String FECHA_FIN = "fechaFin";
-    private static String HORAS = "horas";
-    private static String PRECIO_MATERIAL = "precio material";
-    private static String TIPO = "tipo";
-    private static String REVISION = "revision";
-    private static String MECANICO = "mecanico";
+    private static final String FICHERO_TRABAJOS = String.format("%s%s%s", "Datos", File.separator, "trabajos.xml");
+    private static final DateTimeFormatter FORMATO_FECHA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static final String RAIZ = "trabajos";
+    private static final String TRABAJO = "trabajo";
+    private static final String CLIENTE = "cliente";
+    private static final String VEHICULO = "vehiculo";
+    private static final String FECHA_INICIO = "fechaInicio";
+    private static final String FECHA_FIN = "fechaFin";
+    private static final String HORAS = "horas";
+    private static final String PRECIO_MATERIAL = "precio material";
+    private static final String TIPO = "tipo";
+    private static final String REVISION = "revision";
+    private static final String MECANICO = "mecanico";
 
 
     private static Trabajos instancia;
@@ -64,86 +64,45 @@ public class Trabajos implements ITrabajos {
         UtilidadesXml.escribirDocumentoXml(trabajoXML, FICHERO_TRABAJOS);
     }
 
-    private void procesarDocumentoXML(Document documentoXML) {
-        Objects.requireNonNull(documentoXML, "El documento XML no puede ser nulo.");
-        NodeList trabajos = documentoXML.getElementsByTagName(TRABAJO);
-        for (int i = 0; i < trabajos.getLength(); i++) {
-            Element elementoTrabajo = (Element) trabajos.item(i);
-            if (elementoTrabajo.getNodeType() == Node.ELEMENT_NODE) {
-                try {
-                    insertar(getTrabajo(elementoTrabajo));
-                } catch (OperationNotSupportedException | NullPointerException e) {
-                    System.out.println("Error en el trabajo número: " + i + " : " + e.getMessage());
+    private void procesarDocumentoXML(Document documentoXml) {
+        NodeList alquileres = documentoXml.getElementsByTagName(TRABAJO);
+        for (int i = 0; i < alquileres.getLength(); i++) {
+            Node trabajo = alquileres.item(i);
+            try {
+                if (trabajo.getNodeType() == Node.ELEMENT_NODE) {
+                    insertar(getTrabajo((Element) trabajo));
                 }
+            } catch (OperationNotSupportedException|IllegalArgumentException|NullPointerException e) {
+                System.out.printf("Error al leer el trabajo %d. --> %s%n", i, e.getMessage());
             }
         }
     }
 
-    private Trabajo getTrabajo(Element element) throws OperationNotSupportedException {
-        Trabajo elementoTrabajo = null;
-        Cliente cliente = Clientes.getInstancia().buscar(Cliente.get(element.getAttribute(CLIENTE)));
-        Vehiculo vehiculo = Vehiculos.getInstancia().buscar(Vehiculo.get(element.getAttribute(VEHICULO)));
-        LocalDate fechaInicio = LocalDate.parse(element.getAttribute(FECHA_INICIO), FORMATO_FECHA);
-        LocalDate fechaFin;
-        int horas;
-        float precioMaterial;
-        if (element.hasAttribute(HORAS)) {
-            horas = Integer.parseInt(element.getAttribute(HORAS));
-            if (element.getAttribute(TIPO).equals(REVISION)) {
-                elementoTrabajo = new Revision(cliente, vehiculo, fechaInicio);
-                elementoTrabajo.anadirHoras(horas);
-                if (element.hasAttribute(FECHA_FIN)) {
-                    fechaFin = LocalDate.parse(element.getAttribute(FECHA_FIN), FORMATO_FECHA);
-                    elementoTrabajo.cerrar(fechaFin);
-                }
-            } else if (element.getAttribute(TIPO).equals(MECANICO)) {
-                elementoTrabajo = new Mecanico(cliente, vehiculo, fechaInicio);
-                elementoTrabajo.anadirHoras(horas);
-                if (element.hasAttribute(PRECIO_MATERIAL)) {
-                    precioMaterial = Float.parseFloat(element.getAttribute(PRECIO_MATERIAL));
-                    ((Mecanico) elementoTrabajo).anadirPrecioMaterial(precioMaterial);
-
-                }
-                if (element.hasAttribute(FECHA_FIN)) {
-                    fechaFin = LocalDate.parse(element.getAttribute(FECHA_FIN), FORMATO_FECHA);
-                    elementoTrabajo.cerrar(fechaFin);
-                }
+    private Trabajo getTrabajo(Element elemento) throws OperationNotSupportedException {
+        Cliente cliente = Cliente.get(elemento.getAttribute(CLIENTE));
+        cliente = Clientes.getInstancia().buscar(cliente);
+        Vehiculo vehiculo = Vehiculo.get(elemento.getAttribute(VEHICULO));
+        vehiculo = Vehiculos.getInstancia().buscar(vehiculo);
+        LocalDate fechaInicio = LocalDate.parse(elemento.getAttribute(FECHA_INICIO), FORMATO_FECHA);
+        String tipo = elemento.getAttribute(TIPO);
+        Trabajo trabajo = null;
+        if (tipo.equals(REVISION)) {
+            trabajo = new Revision(cliente, vehiculo, fechaInicio);
+        } else if (tipo.equals(MECANICO)) {
+            trabajo = new Mecanico(cliente, vehiculo, fechaInicio);
+            if (elemento.hasAttribute(PRECIO_MATERIAL)) {
+                ((Mecanico) trabajo).anadirPrecioMaterial(Float.parseFloat(elemento.getAttribute(PRECIO_MATERIAL)));
             }
         }
-
-
-
-        /* Document documentoXml = UtilidadesXml.leerDocumentoXml(FICHERO_TRABAJOS);
-        Trabajo elementoTrabajo = null;
-        Cliente cliente = null;
-        Vehiculo vehiculo = null;
-        LocalDate fechaInicio = null;
-        LocalDate fechaFin = null;
-        int horas = 0;
-        float precioMaterial = 0;
-        if (documentoXml.getDocumentElement().equals(element)) {
-            cliente = Cliente.get(element.getAttribute(CLIENTE));
-            vehiculo = Vehiculo.get(element.getAttribute(VEHICULO));
-            fechaInicio = LocalDate.parse(element.getAttribute(FECHA_INICIO), FORMATO_FECHA);
-            if (element.getAttribute(TIPO).equals(REVISION)) {
-                elementoTrabajo = new Revision(cliente, vehiculo, fechaInicio);
-            } else {
-                elementoTrabajo = new Mecanico(cliente, vehiculo, fechaInicio);
-            }
-            if (element.hasAttribute(PRECIO_MATERIAL) && elementoTrabajo instanceof Mecanico) {
-                precioMaterial = Float.parseFloat(element.getAttribute(PRECIO_MATERIAL));
-                ((Mecanico) elementoTrabajo).anadirPrecioMaterial(precioMaterial);
-            }
-            if (element.hasAttribute(HORAS)) {
-                horas = Integer.parseInt(element.getAttribute(HORAS));
-                elementoTrabajo.anadirHoras(horas);
-            }
-            if (element.hasAttribute(FECHA_FIN)) {
-                fechaFin = LocalDate.parse(element.getAttribute(FECHA_FIN), FORMATO_FECHA);
-                elementoTrabajo.cerrar(fechaFin);
-            }
-        } */
-        return elementoTrabajo;
+        if (elemento.hasAttribute(HORAS) && trabajo != null) {
+            int horas = Integer.parseInt(elemento.getAttribute(HORAS));
+            trabajo.anadirHoras(horas);
+        }
+        if (elemento.hasAttribute(FECHA_FIN) && trabajo != null) {
+            LocalDate fechaFin = LocalDate.parse(elemento.getAttribute(FECHA_FIN), FORMATO_FECHA);
+            trabajo.cerrar(fechaFin);
+        }
+        return trabajo;
     }
 
     private Document crearDocumentoXml() {

@@ -44,16 +44,15 @@ public class Clientes implements IClientes {
     }
 
     private void procesarDocumentoXml(Document documentoXml) {
-        Objects.requireNonNull(documentoXml, "El documento xml de clientes no puede ser nulo.");
         NodeList clientes = documentoXml.getElementsByTagName(CLIENTE);
         for (int i = 0; i < clientes.getLength(); i++) {
-            Element cliente = (Element) clientes.item(i);
-            if (cliente.getNodeType() == Node.ELEMENT_NODE) {
-                try {
-                    insertar(getCliente(cliente));
-                } catch (OperationNotSupportedException | IllegalArgumentException | NullPointerException e) {
-                    System.out.println("Error en el cliente " + i + " : " + e.getMessage());
+            Node cliente = clientes.item(i);
+            try {
+                if (cliente.getNodeType() == Node.ELEMENT_NODE) {
+                    insertar(getCliente((Element) cliente));
                 }
+            } catch (OperationNotSupportedException|IllegalArgumentException|NullPointerException e) {
+                System.out.printf("Error al leer el cliente %d. --> %s%n", i, e.getMessage());
             }
         }
     }
@@ -62,21 +61,7 @@ public class Clientes implements IClientes {
         String nombre = element.getAttribute(NOMBRE);
         String dni = element.getAttribute(DNI);
         String telefono = element.getAttribute(TELEFONO);
-        /* Document documentoXml = UtilidadesXml.leerDocumentoXml(RAIZ + File.separator + FICHERO_CLIENTES);
-        String dni = null;
-        String nombre = null;
-        String telefono = null;
-        if (documentoXml.getDocumentElement().equals(element)) {
-            if (element.hasAttribute(DNI)) {
-                dni = element.getAttribute(DNI);
-            }
-            if (element.hasAttribute(NOMBRE)) {
-                nombre = element.getAttribute(NOMBRE);
-            }
-            if (element.hasAttribute(TELEFONO)) {
-                telefono = element.getAttribute(TELEFONO);
-            }
-        } */
+
         return new Cliente(nombre, dni, telefono);
     }
 
@@ -97,31 +82,26 @@ public class Clientes implements IClientes {
         Document documentoXml = null;
         if (constructor != null) {
             documentoXml = constructor.newDocument();
+            documentoXml.appendChild(documentoXml.createElement(RAIZ));
+            for (Cliente cliente : coleccionClientes) {
+                Element elemento = getElemento(documentoXml, cliente);
+                documentoXml.getDocumentElement().appendChild(elemento);
+            }
         }
         return documentoXml;
     }
 
     public void terminar() {
-        Document clienteXML = crearDocumentoXml();
-        if (clienteXML != null) {
-            clienteXML.appendChild(clienteXML.createElement(RAIZ));
-            for (Cliente cliente : coleccionClientes) {
-                Element elementoCliente = getElemento(clienteXML, cliente);
-                clienteXML.getDocumentElement().appendChild(elementoCliente);
-            }
-        }
-        UtilidadesXml.escribirDocumentoXml(clienteXML, FICHERO_CLIENTES);
+        Document documentoXml = crearDocumentoXml();
+        UtilidadesXml.escribirDocumentoXml(documentoXml, FICHERO_CLIENTES);
     }
 
     private Element getElemento(Document documentoXml, Cliente cliente) {
-        Objects.requireNonNull(documentoXml, "El documento xml de clientes no puede ser nulo.");
-        Objects.requireNonNull(cliente, "El cliente no puede ser nulo.");
-        Element elementoCliente = documentoXml.createElement(CLIENTE);
-        elementoCliente.setAttribute(NOMBRE, cliente.getNombre());
-        elementoCliente.setAttribute(DNI, cliente.getDni());
-        elementoCliente.setAttribute(TELEFONO, cliente.getTelefono());
-
-        return elementoCliente;
+        Element elemento = documentoXml.createElement(CLIENTE);
+        elemento.setAttribute(NOMBRE, cliente.getNombre());
+        elemento.setAttribute(DNI, cliente.getDni());
+        elemento.setAttribute(TELEFONO, cliente.getTelefono());
+        return elemento;
     }
 
     public boolean modificar(Cliente cliente, String nombre, String telefono) throws OperationNotSupportedException {
@@ -150,11 +130,9 @@ public class Clientes implements IClientes {
 
     public void borrar(Cliente cliente) throws OperationNotSupportedException {
         Objects.requireNonNull(cliente, "No se puede borrar un cliente nulo.");
-        int indice = coleccionClientes.indexOf(cliente);
-        if (indice == -1) {
+        if (!coleccionClientes.contains(cliente)) {
             throw new OperationNotSupportedException("No existe ningún cliente con ese DNI.");
-        } else {
-            coleccionClientes.remove(indice);
         }
+        coleccionClientes.remove(cliente);
     }
 }
