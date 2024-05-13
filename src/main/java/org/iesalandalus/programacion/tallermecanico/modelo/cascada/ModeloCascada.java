@@ -45,7 +45,6 @@ public class ModeloCascada implements Modelo {
     }
     @Override
     public void insertar(Trabajo trabajo) throws OperationNotSupportedException {
-        Objects.requireNonNull(trabajo, "La revisión a insertar no puede ser nula.");
         Cliente cliente = clientes.buscar(trabajo.getCliente());
         Vehiculo vehiculo = vehiculos.buscar(trabajo.getVehiculo());
         if (trabajo instanceof Revision) {
@@ -89,23 +88,22 @@ public class ModeloCascada implements Modelo {
     }
     @Override
     public void borrar(Cliente cliente) throws OperationNotSupportedException {
-        Objects.requireNonNull(cliente, "El cliente no puede ser nulo borrar.");
-        for (Trabajo trabajo : trabajos.get(cliente)) {
+        List<Trabajo> trabajosCliente = trabajos.get(cliente);
+        for (Trabajo trabajo : trabajosCliente) {
             trabajos.borrar(trabajo);
         }
         clientes.borrar(cliente);
     }
     @Override
     public void borrar(Vehiculo vehiculo) throws OperationNotSupportedException {
-        Objects.requireNonNull(vehiculo, "El vehículo no puede ser nulo borrar.");
-        for (Trabajo trabajo : trabajos.get(vehiculo)) {
+        List<Trabajo> trabajosVehiculo = trabajos.get(vehiculo);
+        for (Trabajo trabajo : trabajosVehiculo) {
             trabajos.borrar(trabajo);
         }
         vehiculos.borrar(vehiculo);
     }
     @Override
     public void borrar(Trabajo trabajo) throws OperationNotSupportedException {
-        Objects.requireNonNull(trabajo, "La revisión no puede ser nula borrar.");
         trabajos.borrar(trabajo);
     }
     @Override
@@ -123,41 +121,28 @@ public class ModeloCascada implements Modelo {
 
     @Override
     public List<Trabajo> getTrabajos() {
-        List<Trabajo> listaRevision = new ArrayList<>();
+        List<Trabajo> copiaTrabajos = new ArrayList<>();
         for (Trabajo trabajo : trabajos.get()) {
-            if (trabajo instanceof Revision revision) {
-                listaRevision.add(new Revision(revision));
-            } else if (trabajo instanceof Mecanico mecanico) {
-                listaRevision.add(new Mecanico(mecanico));
-            }
+            copiaTrabajos.add(Trabajo.copiar(trabajo));
         }
-        return listaRevision;
+        return copiaTrabajos;
     }
+
     @Override
     public List<Trabajo> getTrabajos(Cliente cliente) {
-        Objects.requireNonNull(cliente, "El cliente no puede ser nulo getRevisiones.");
-        List<Trabajo> trabajoCliente = new ArrayList<>();
+        List<Trabajo> trabajosCliente = new ArrayList<>();
         for (Trabajo trabajo : trabajos.get(cliente)) {
-            if (trabajo instanceof Revision revision) {
-                trabajoCliente.add(new Revision(revision));
-            } else if (trabajo instanceof Mecanico mecanico) {
-                trabajoCliente.add(new Mecanico(mecanico));
-            }
+            trabajosCliente.add(Trabajo.copiar(trabajo));
         }
-        return trabajoCliente;
+        return trabajosCliente;
     }
     @Override
     public List<Trabajo> getTrabajos(Vehiculo vehiculo) {
-        Objects.requireNonNull(vehiculo, "El vehículo no puede ser nulo getRevisiones.");
-        List<Trabajo> trabajoVehiculo = new ArrayList<>();
+        List<Trabajo> trabajosCliente = new ArrayList<>();
         for (Trabajo trabajo : trabajos.get(vehiculo)) {
-            if (trabajo instanceof Revision revision) {
-                trabajoVehiculo.add(new Revision(revision));
-            } else if (trabajo instanceof Mecanico mecanico) {
-                trabajoVehiculo.add(new Mecanico(mecanico));
-            }
+            trabajosCliente.add(Trabajo.copiar(trabajo));
         }
-        return trabajoVehiculo;
+        return trabajosCliente;
     }
     public Map<TipoTrabajo, Integer> getEstadisticasMensuales (LocalDate mes) {
         return trabajos.getEstadisticasMensuales(mes);

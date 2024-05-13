@@ -5,7 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Cliente {
-    private static final String ER_NOMBRE = "[A-Z√Å√â√ç√ì√ö√ë][a-z√°√©√≠√≥√∫√º√±]+(?: [A-Z√Å√â√ç√ì√ö][a-z√°√©√≠√≥√∫√º√±]+)*+";
+    private static final String ER_NOMBRE = "[A-Z¡…Õ”⁄—][a-z·ÈÌÛ˙¸Ò]+(?: [A-Z¡…Õ”⁄][a-z·ÈÌÛ˙¸Ò]+)*+";
     private static final String ER_DNI = "(\\d{8})([A-Z])";
     private static final String ER_TELEFONO = "\\d{9}";
     private String nombre;
@@ -33,7 +33,7 @@ public class Cliente {
         Pattern patron = Pattern.compile(ER_NOMBRE);
         Matcher comparador = patron.matcher(nombre);
         if (!comparador.matches()) {
-            throw new IllegalArgumentException("El nombre no tiene un formato v√°lido.");
+            throw new IllegalArgumentException("El nombre no tiene un formato v·lido.");
         }
         this.nombre = nombre;
     }
@@ -47,7 +47,7 @@ public class Cliente {
         Pattern patron = Pattern.compile(ER_DNI);
         Matcher comparador = patron.matcher(dni);
         if (!comparador.matches()) {
-            throw new IllegalArgumentException("El DNI no tiene un formato v√°lido.");
+            throw new IllegalArgumentException("El DNI no tiene un formato v·lido.");
         }
         comprobarLetraDNI(dni);
         this.dni = dni;
@@ -72,11 +72,11 @@ public class Cliente {
         return telefono;
     }
     public void setTelefono(String telefono) {
-        Objects.requireNonNull(telefono, "El tel√©fono no puede ser nulo.");
+        Objects.requireNonNull(telefono, "El telÈfono no puede ser nulo.");
         Pattern patron = Pattern.compile(ER_TELEFONO);
         Matcher comparador = patron.matcher(telefono);
         if (!comparador.matches()) {
-            throw new IllegalArgumentException("El tel√©fono no tiene un formato v√°lido.");
+            throw new IllegalArgumentException("El telÈfono no tiene un formato v·lido.");
         }
         this.telefono = telefono;
     }
