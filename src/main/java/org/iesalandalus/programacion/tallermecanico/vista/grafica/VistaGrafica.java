@@ -7,7 +7,9 @@ import org.iesalandalus.programacion.tallermecanico.modelo.dominio.Vehiculo;
 import org.iesalandalus.programacion.tallermecanico.vista.Vista;
 import org.iesalandalus.programacion.tallermecanico.vista.eventos.Evento;
 import org.iesalandalus.programacion.tallermecanico.vista.eventos.GestorEventos;
+import org.iesalandalus.programacion.tallermecanico.vista.grafica.controladores.InsertarCliente;
 import org.iesalandalus.programacion.tallermecanico.vista.grafica.utilidades.Controlador;
+import org.iesalandalus.programacion.tallermecanico.vista.grafica.utilidades.Controladores;
 import org.iesalandalus.programacion.tallermecanico.vista.grafica.utilidades.Dialogos;
 
 import javax.naming.OperationNotSupportedException;
@@ -16,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 public class VistaGrafica implements Vista {
+
 
     private final GestorEventos gestorEventos = new GestorEventos(Evento.values());
 
@@ -39,7 +42,8 @@ public class VistaGrafica implements Vista {
 
     @Override
     public Cliente leerCliente() {
-        return null;
+        InsertarCliente ventanaInsertar = (InsertarCliente) Controladores.get("/vistas/InsertarCliente.fxml", "Inserción de Clientes", ventanaPrincipal.getEscenario());
+        return ventanaInsertar.getCliente();
     }
 
     @Override

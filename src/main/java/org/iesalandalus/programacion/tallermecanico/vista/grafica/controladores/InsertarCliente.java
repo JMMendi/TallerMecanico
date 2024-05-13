@@ -12,6 +12,8 @@ public class InsertarCliente extends Controlador {
     private String dni;
     private String telefono;
 
+    private boolean cancelado = false;
+
     @FXML
     private Button btAceptar;
 
@@ -27,24 +29,36 @@ public class InsertarCliente extends Controlador {
     @FXML
     private TextField tfTelefono;
 
-    @FXML
-    void aceptarInsertar() {
+    boolean isCancelado() {
+        return cancelado;
+    }
+
+    public Cliente getCliente() {
         nombre = tfNombre.getText();
         dni = tfDni.getText();
         telefono = tfTelefono.getText();
 
-        Cliente cliente = new Cliente(nombre, dni, telefono);
+        return new Cliente(nombre, dni, telefono);
+    }
+
+    @FXML
+    void aceptarInsertar() {
+        getCliente();
         VistaGrafica.getInstancia().leerCliente();
         getEscenario().close();
     }
 
-    @FXML
-    void cancelarInsertar() {
+    void limpiar() {
         tfNombre.clear();
         tfDni.clear();
         tfTelefono.clear();
-        getEscenario().close();
+    }
 
+    @FXML
+    void cancelarInsertar() {
+        cancelado = true;
+        isCancelado();
+        getEscenario().close();
     }
 
     @FXML

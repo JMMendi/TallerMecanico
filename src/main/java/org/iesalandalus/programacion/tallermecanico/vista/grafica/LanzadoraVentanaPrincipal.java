@@ -9,7 +9,7 @@ import org.iesalandalus.programacion.tallermecanico.vista.grafica.utilidades.Con
 public class LanzadoraVentanaPrincipal extends Application {
     @Override
     public void start(Stage stage) throws Exception {
-        Controlador ventanaPrincipal = Controladores.get("/vistas/ventanaPrincipal.fxml", "Taller Mec√°nico", null);
+        Controlador ventanaPrincipal = Controladores.get("/vistas/ventanaPrincipal.fxml", "Taller Mec·nico", null);
         VistaGrafica.getInstancia().setVentanaPrincipal(ventanaPrincipal);
 
         ventanaPrincipal.getEscenario().show();
