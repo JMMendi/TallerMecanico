@@ -118,11 +118,14 @@ public class VistaGrafica implements Vista {
 
     @Override
     public void terminar() {
-
+        if (Dialogos.mostrarDialogoConfirmacion("Salir", "¿Estás seguro de querer salir de la aplicación?", ventanaPrincipal.getEscenario())){
+            ventanaPrincipal.getEscenario().close();
+            VistaGrafica.getInstancia().getGestorEventos().notificar(Evento.SALIR);
+        }
     }
 
     @Override
-    public void notificarResultado(Evento evento, String texto, boolean exito) throws OperationNotSupportedException {
+    public void notificarResultado(Evento evento, String texto, boolean exito)  {
         if (exito) {
             Dialogos.mostrarDialogoInformacion(evento.toString(), texto, ventanaPrincipal.getEscenario());
         } else {

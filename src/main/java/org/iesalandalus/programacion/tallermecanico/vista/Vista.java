@@ -42,7 +42,7 @@ public interface Vista {
 
     void terminar();
 
-    void notificarResultado(Evento evento, String texto, boolean exito) throws OperationNotSupportedException;
+    void notificarResultado(Evento evento, String texto, boolean exito);
 
     void mostrarCliente(Cliente cliente);
 

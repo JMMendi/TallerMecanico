@@ -31,7 +31,7 @@ public class GestorEventos {
         }
     }
 
-    public void notificar(Evento evento) throws OperationNotSupportedException {
+    public void notificar(Evento evento) {
         Objects.requireNonNull(evento, "El evento no puede ser nulo.");
         for (ReceptorEventos receptor : receptores.get(evento)) {
             receptor.actualizar(evento);

@@ -28,7 +28,7 @@ public class Controlador implements IControlador {
     }
 
     @Override
-    public void actualizar(Evento evento) throws OperationNotSupportedException {
+    public void actualizar(Evento evento){
         Objects.requireNonNull(evento, "El evento no puede ser nulo.");
         String resultado = "";
         try {
