@@ -19,6 +19,7 @@ public class VentanaPrincipal extends Controlador {
 
     private final InsertarCliente ventanaInsertarCliente = (InsertarCliente) Controladores.get("/vistas/InsertarCliente.fxml", "Inserción de Clientes", getEscenario());
     private final BorrarCliente ventanaBorrarCliente = (BorrarCliente) Controladores.get("/vistas/BorrarCliente.fxml", "Borrado de Clientes", getEscenario());
+    private final BuscarCliente ventanaBuscarCliente = (BuscarCliente) Controladores.get("/vistas/BuscarCliente.fxml", "Búsqueda de Clientes", getEscenario());
 
     @FXML
     private Button btBorrarCliente;
@@ -42,10 +43,10 @@ public class VentanaPrincipal extends Controlador {
     private Button btMostrarCliente;
 
     @FXML
-    private Button btMostrarTrabajos;
+    private Button btMostrarTrabajo;
 
     @FXML
-    private Button btMostrarVehiculos;
+    private Button btMostrarVehiculo;
 
     @FXML
     private ImageView ivBorrar;
@@ -159,17 +160,18 @@ public class VentanaPrincipal extends Controlador {
     }
 
     @FXML
-    void mostrarClientes() {
+    void mostrarCliente() {
+        ventanaBuscarCliente.limpiar();
+        ventanaBuscarCliente.getEscenario().showAndWait();
+    }
+
+    @FXML
+    void mostrarTrabajo() {
 
     }
 
     @FXML
-    void mostrarTrabajos() {
-
-    }
-
-    @FXML
-    void mostrarVehiculos() {
+    void mostrarVehiculo() {
 
     }
 

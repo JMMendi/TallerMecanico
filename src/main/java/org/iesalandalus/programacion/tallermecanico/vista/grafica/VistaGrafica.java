@@ -7,6 +7,8 @@ import org.iesalandalus.programacion.tallermecanico.modelo.dominio.Vehiculo;
 import org.iesalandalus.programacion.tallermecanico.vista.Vista;
 import org.iesalandalus.programacion.tallermecanico.vista.eventos.Evento;
 import org.iesalandalus.programacion.tallermecanico.vista.eventos.GestorEventos;
+import org.iesalandalus.programacion.tallermecanico.vista.grafica.controladores.BorrarCliente;
+import org.iesalandalus.programacion.tallermecanico.vista.grafica.controladores.BuscarCliente;
 import org.iesalandalus.programacion.tallermecanico.vista.grafica.controladores.InsertarCliente;
 import org.iesalandalus.programacion.tallermecanico.vista.grafica.utilidades.Controlador;
 import org.iesalandalus.programacion.tallermecanico.vista.grafica.utilidades.Controladores;
@@ -48,7 +50,17 @@ public class VistaGrafica implements Vista {
 
     @Override
     public Cliente leerClienteDni() {
-        return null;
+        BorrarCliente ventanaBorrar = (BorrarCliente) Controladores.get("/vistas/BorrarCliente.fxml", "Borrado de Clientes", ventanaPrincipal.getEscenario());
+        BuscarCliente ventanaBuscarCliente = (BuscarCliente) Controladores.get("/vistas/BuscarCliente.fxml", "Búsqueda de Clientes", ventanaPrincipal.getEscenario());
+        Cliente cliente;
+
+        if (ventanaBorrar.getCliente().getDni().isBlank()) {
+            cliente = ventanaBuscarCliente.getCliente();
+        } else {
+            cliente = ventanaBorrar.getCliente();
+        }
+
+        return cliente;
     }
 
     @Override
@@ -118,7 +130,7 @@ public class VistaGrafica implements Vista {
 
     @Override
     public void terminar() {
-        if (Dialogos.mostrarDialogoConfirmacion("Salir", "¿Estás seguro de querer salir de la aplicación?", ventanaPrincipal.getEscenario())){
+        if (Dialogos.mostrarDialogoConfirmacion("Salir", "?Est?s seguro de querer salir de la aplicaci?n?", ventanaPrincipal.getEscenario())){
             ventanaPrincipal.getEscenario().close();
             VistaGrafica.getInstancia().getGestorEventos().notificar(Evento.SALIR);
         }

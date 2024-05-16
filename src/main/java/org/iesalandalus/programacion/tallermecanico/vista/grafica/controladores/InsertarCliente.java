@@ -63,9 +63,6 @@ public class InsertarCliente extends Controlador {
 
     @FXML
     void initialize() {
-//        tfNombre.textProperty().addListener((observable, oldValue, newValue) -> aceptarInsertar());
-//        tfDni.textProperty().addListener((observable, oldValue, newValue) -> aceptarInsertar());
-//        tfTelefono.textProperty().addListener((observable, oldValue, newValue) -> aceptarInsertar());
 
     }
 
