@@ -28,6 +28,7 @@ public class Cliente {
     public String getNombre() {
         return nombre;
     }
+
     public void setNombre(String nombre) {
         Objects.requireNonNull(nombre, "El nombre no puede ser nulo.");
         Pattern patron = Pattern.compile(ER_NOMBRE);

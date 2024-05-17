@@ -52,7 +52,7 @@ public class VistaGrafica implements Vista {
         BuscarCliente ventanaBuscarCliente = (BuscarCliente) Controladores.get("/vistas/BuscarCliente.fxml", "Búsqueda de Clientes", ventanaPrincipal.getEscenario());
         Cliente cliente;
 
-        if (ventanaBorrar.getCliente().getDni().isBlank()) {
+        if (ventanaBuscarCliente.getEscenario().isShowing()) {
             cliente = ventanaBuscarCliente.getCliente();
         } else {
             cliente = ventanaBorrar.getCliente();
@@ -80,7 +80,15 @@ public class VistaGrafica implements Vista {
     @Override
     public Vehiculo leerVehiculoMatricula() {
         BorrarVehiculo ventanaBorrarVehiculo = (BorrarVehiculo) Controladores.get("/vistas/BorrarVehiculo.fxml", "Borrado de Vehículos", ventanaPrincipal.getEscenario());
-        return ventanaBorrarVehiculo.getVehiculoMatricula();
+        BuscarVehiculo ventanaBuscarVehiculo = (BuscarVehiculo) Controladores.get("/vistas/BuscarVehiculo.fxml", "Búsqueda de Vehículos", ventanaPrincipal.getEscenario());
+        Vehiculo vehiculo;
+        if (ventanaBorrarVehiculo.getEscenario().isShowing()) {
+            vehiculo = ventanaBorrarVehiculo.getVehiculoMatricula();
+        } else {
+            vehiculo = ventanaBuscarVehiculo.getVehiculoMatricula();
+        }
+
+        return vehiculo;
     }
 
     @Override
@@ -147,12 +155,14 @@ public class VistaGrafica implements Vista {
 
     @Override
     public void mostrarCliente(Cliente cliente) {
-
+        BuscarCliente ventanaBuscarCliente = (BuscarCliente) Controladores.get("/vistas/BuscarCliente.fxml", "Búsqueda de Clientes", ventanaPrincipal.getEscenario());
+        ventanaBuscarCliente.actualizar(cliente);
     }
 
     @Override
     public void mostrarVehiculo(Vehiculo vehiculo) {
-
+        BuscarVehiculo ventanaBuscarVehiculo = (BuscarVehiculo) Controladores.get("/vistas/BuscarVehiculo.fxml", "Búsqueda de Vehículos", ventanaPrincipal.getEscenario());
+        ventanaBuscarVehiculo.actualizar(vehiculo);
     }
 
     @Override

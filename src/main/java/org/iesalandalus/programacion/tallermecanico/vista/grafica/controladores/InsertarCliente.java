@@ -57,7 +57,6 @@ public class InsertarCliente extends Controlador {
     @FXML
     void cancelarInsertar() {
         cancelado = true;
-        isCancelado();
         getEscenario().close();
     }
 

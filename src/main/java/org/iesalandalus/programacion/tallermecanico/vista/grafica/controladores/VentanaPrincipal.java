@@ -23,6 +23,7 @@ public class VentanaPrincipal extends Controlador {
     private final BuscarCliente ventanaBuscarCliente = (BuscarCliente) Controladores.get("/vistas/BuscarCliente.fxml", "Búsqueda de Clientes", getEscenario());
     private final InsertarVehiculo ventanaInsertarVehiculo = (InsertarVehiculo) Controladores.get("/vistas/InsertarVehiculo.fxml", "Inserción de Vehículos", getEscenario());
     private final BorrarVehiculo ventanaBorrarVehiculo = (BorrarVehiculo) Controladores.get("/vistas/BorrarVehiculo.fxml", "Borrado de Vehículos", getEscenario());
+    private final BuscarVehiculo ventanaBuscarVehiculo = (BuscarVehiculo) Controladores.get("/vistas/BuscarVehiculo.fxml", "Búsqueda de Vehículos", getEscenario());
 
     @FXML
     private Button btBorrarCliente;
@@ -189,12 +190,13 @@ public class VentanaPrincipal extends Controlador {
 
     @FXML
     void mostrarVehiculo() {
-
+        ventanaBuscarVehiculo.limpiar();
+        ventanaBuscarVehiculo.getEscenario().showAndWait();
     }
 
     @FXML
     void salir() {
-        if (Dialogos.mostrarDialogoConfirmacion("Salir", "¿Estás seguro de querer salir de la aplicación?", getEscenario())){
+        if (Dialogos.mostrarDialogoConfirmacion("Salir", "¿Estás seguro de querer salir de la aplicación?", getEscenario())) {
             getEscenario().close();
             VistaGrafica.getInstancia().getGestorEventos().notificar(Evento.SALIR);
         }

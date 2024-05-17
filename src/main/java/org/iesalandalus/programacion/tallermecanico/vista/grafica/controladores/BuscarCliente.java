@@ -13,7 +13,6 @@ import org.iesalandalus.programacion.tallermecanico.vista.grafica.utilidades.Dia
 public class BuscarCliente extends Controlador {
 
     private String bDni;
-    private boolean busqueda = false;
 
     @FXML
     private Button btAceptar;
@@ -38,24 +37,14 @@ public class BuscarCliente extends Controlador {
         return new Cliente(Cliente.get(bDni));
     }
 
-    boolean isBusqueda() {
-        return busqueda;
-    }
-
     @FXML
-    void comprobar() {
-        if (!tfDni.getText().isBlank()) {
-            getCliente();
-            VistaGrafica.getInstancia().leerClienteDni();
-            VistaGrafica.getInstancia().getGestorEventos().notificar(Evento.BUSCAR_CLIENTE);
-            rellenar();
-        } else {
-            Dialogos.mostrarDialogoError("Dni Vacío", "Error, el campo de DNI está vacío", getEscenario());
-        }
+    void mostrar() {
+        VistaGrafica.getInstancia().getGestorEventos().notificar(Evento.BUSCAR_CLIENTE);
     }
 
-    void rellenar() {
-
+    public void actualizar(Cliente cliente) {
+        tfNombre.setText(cliente.getNombre());
+        tfTelefono.setText(cliente.getTelefono());
     }
 
     void limpiar() {
