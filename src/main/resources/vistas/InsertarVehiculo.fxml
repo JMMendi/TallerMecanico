@@ -11,9 +11,10 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="295.0" prefWidth="525.0" style="-fx-background-color: pink; -fx-background-radius: 20; -fx-background-insets: 20;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.iesalandalus.programacion.tallermecanico.vista.grafica.controladores.BuscarCliente">
+
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="293.0" prefWidth="503.0" style="-fx-background-color: lightblue;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.iesalandalus.programacion.tallermecanico.vista.grafica.controladores.InsertarVehiculo">
    <children>
-      <Label text="Búsqueda de Clientes">
+      <Label text="Inserción de Vehículos">
          <font>
             <Font name="MV Boli" size="18.0" />
          </font>
@@ -32,46 +33,46 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label text="Nombre:">
+            <Label text="Marca:">
                <GridPane.margin>
                   <Insets left="80.0" />
                </GridPane.margin>
             </Label>
-            <Label text="DNI:" GridPane.rowIndex="1">
+            <Label text="Modelo:" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets left="80.0" />
                </GridPane.margin>
             </Label>
-            <Label text="Teléfono" GridPane.rowIndex="2">
-               <GridPane.margin>
+            <Label text="Matrícula:" GridPane.rowIndex="2">
+               <padding>
                   <Insets left="80.0" />
-               </GridPane.margin>
+               </padding>
             </Label>
-            <TextField fx:id="tfNombre" disable="true" GridPane.columnIndex="1">
+            <TextField fx:id="tfMarca" GridPane.columnIndex="1">
                <GridPane.margin>
-                  <Insets right="80.0" />
+                  <Insets right="50.0" />
                </GridPane.margin>
             </TextField>
-            <TextField fx:id="tfDni" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <TextField fx:id="tfModelo" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <GridPane.margin>
-                  <Insets right="80.0" />
+                  <Insets right="50.0" />
                </GridPane.margin>
             </TextField>
-            <TextField fx:id="tfTelefono" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <TextField fx:id="tfMatricula" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <GridPane.margin>
-                  <Insets right="80.0" />
+                  <Insets right="50.0" />
                </GridPane.margin>
             </TextField>
          </children>
       </GridPane>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
          <children>
-            <Button fx:id="btAceptar" mnemonicParsing="false" onAction="#salir" text="Aceptar">
+            <Button fx:id="btAceptar" mnemonicParsing="false" onAction="#insertarVehiculo" text="Aceptar">
                <HBox.margin>
-                  <Insets right="40.0" />
+                  <Insets right="60.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="btMostrar" mnemonicParsing="false" onAction="#comprobar" text="Buscar Cliente" />
+            <Button fx:id="btCancelar" mnemonicParsing="false" onAction="#cancelarSalir" text="Cancelar" />
          </children>
       </HBox>
    </children>

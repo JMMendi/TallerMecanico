@@ -43,17 +43,19 @@ public class BuscarCliente extends Controlador {
     }
 
     @FXML
-    void rellenar() {
+    void comprobar() {
         if (!tfDni.getText().isBlank()) {
             getCliente();
             VistaGrafica.getInstancia().leerClienteDni();
             VistaGrafica.getInstancia().getGestorEventos().notificar(Evento.BUSCAR_CLIENTE);
-
-            tfNombre.setText(VistaGrafica.getInstancia().leerClienteDni().getNombre());
-            tfTelefono.setText(VistaGrafica.getInstancia().leerClienteDni().getTelefono());
+            rellenar();
         } else {
             Dialogos.mostrarDialogoError("Dni Vacío", "Error, el campo de DNI está vacío", getEscenario());
         }
+    }
+
+    void rellenar() {
+
     }
 
     void limpiar() {

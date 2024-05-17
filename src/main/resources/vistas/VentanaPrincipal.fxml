@@ -34,6 +34,11 @@
               <MenuItem mnemonicParsing="false" text="About" />
             </items>
           </Menu>
+            <Menu fx:id="meSalir" mnemonicParsing="false" text="Salir">
+              <items>
+                <MenuItem fx:id="mSalir" mnemonicParsing="false" onAction="#salir" text="Salir" />
+              </items>
+            </Menu>
         </menus>
       </MenuBar>
       <Label text="Taller Mecánico">

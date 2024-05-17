@@ -15,11 +15,11 @@ public record Vehiculo(String marca, String modelo, String matricula) {
     }
 
     private void validarMatricula(String matricula) {
-        Objects.requireNonNull(matricula, "La matr√≠cula no puede ser nula.");
+        Objects.requireNonNull(matricula, "La matrÌcula no puede ser nula.");
         Pattern patron = Pattern.compile(ER_MATRICULA);
         Matcher comparador = patron.matcher(matricula);
         if (!comparador.matches()) {
-            throw new IllegalArgumentException("La matr√≠cula no tiene un formato v√°lido.");
+            throw new IllegalArgumentException("La matrÌcula no tiene un formato v·lido.");
         }
     }
 
@@ -35,12 +35,12 @@ public record Vehiculo(String marca, String modelo, String matricula) {
         Pattern patron = Pattern.compile(ER_MARCA);
         Matcher comparador = patron.matcher(marca);
         if (!comparador.matches()){
-            throw new IllegalArgumentException("La marca no tiene un formato v√°lido.");
+            throw new IllegalArgumentException("La marca no tiene un formato v·lido.");
         }
     }
 
     public static Vehiculo get(String matricula) {
-        Objects.requireNonNull(matricula, "La matr√≠cula no puede ser nula.");
+        Objects.requireNonNull(matricula, "La matrÌcula no puede ser nula.");
         return new Vehiculo("Seat", "Alpha", matricula);
     }
 

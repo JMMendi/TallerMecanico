@@ -11,6 +11,7 @@ import org.iesalandalus.programacion.tallermecanico.vista.eventos.Evento;
 import org.iesalandalus.programacion.tallermecanico.vista.grafica.VistaGrafica;
 import org.iesalandalus.programacion.tallermecanico.vista.grafica.utilidades.Controlador;
 import org.iesalandalus.programacion.tallermecanico.vista.grafica.utilidades.Controladores;
+import org.iesalandalus.programacion.tallermecanico.vista.grafica.utilidades.Dialogos;
 
 import javax.naming.OperationNotSupportedException;
 import java.util.Objects;
@@ -20,6 +21,7 @@ public class VentanaPrincipal extends Controlador {
     private final InsertarCliente ventanaInsertarCliente = (InsertarCliente) Controladores.get("/vistas/InsertarCliente.fxml", "Inserción de Clientes", getEscenario());
     private final BorrarCliente ventanaBorrarCliente = (BorrarCliente) Controladores.get("/vistas/BorrarCliente.fxml", "Borrado de Clientes", getEscenario());
     private final BuscarCliente ventanaBuscarCliente = (BuscarCliente) Controladores.get("/vistas/BuscarCliente.fxml", "Búsqueda de Clientes", getEscenario());
+    private final InsertarVehiculo ventanaInsertarVehiculo = (InsertarVehiculo) Controladores.get("/vistas/InsertarVehiculo.fxml", "Inserción de Vehículos", getEscenario());
 
     @FXML
     private Button btBorrarCliente;
@@ -76,6 +78,9 @@ public class VentanaPrincipal extends Controlador {
     private Menu mMenu2;
 
     @FXML
+    private Menu meSalir;
+
+    @FXML
     private MenuItem mModificarClientes;
 
     @FXML
@@ -84,7 +89,10 @@ public class VentanaPrincipal extends Controlador {
     @FXML
     private MenuItem mModificarVehiculos;
 
-    private Image imagenLupa = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/lupa.jpg")), 100, 100, true, true);
+    @FXML
+    private MenuItem mSalir;
+
+    private Image imagenLupa = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/lupa2.jpg")), 100, 100, true, true);
     private Image imagenCuaderno = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/cuaderno.png")), 100, 100, true, true);
     private Image imagenBorrador = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/borrador.png")), 100, 100, true, true);
 
@@ -126,7 +134,11 @@ public class VentanaPrincipal extends Controlador {
 
     @FXML
     void insertarVehiculos() {
-
+        ventanaInsertarVehiculo.limpiar();
+        ventanaInsertarVehiculo.getEscenario().showAndWait();
+        if (!ventanaInsertarVehiculo.isCancelado()) {
+            VistaGrafica.getInstancia().getGestorEventos().notificar(Evento.INSERTAR_VEHICULO);
+        }
     }
 
     @FXML
@@ -173,6 +185,14 @@ public class VentanaPrincipal extends Controlador {
     @FXML
     void mostrarVehiculo() {
 
+    }
+
+    @FXML
+    void salir() {
+        if (Dialogos.mostrarDialogoConfirmacion("Salir", "¿Estás seguro de querer salir de la aplicación?", getEscenario())){
+            getEscenario().close();
+            VistaGrafica.getInstancia().getGestorEventos().notificar(Evento.SALIR);
+        }
     }
 
     @FXML

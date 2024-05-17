@@ -10,6 +10,7 @@ import org.iesalandalus.programacion.tallermecanico.vista.eventos.GestorEventos;
 import org.iesalandalus.programacion.tallermecanico.vista.grafica.controladores.BorrarCliente;
 import org.iesalandalus.programacion.tallermecanico.vista.grafica.controladores.BuscarCliente;
 import org.iesalandalus.programacion.tallermecanico.vista.grafica.controladores.InsertarCliente;
+import org.iesalandalus.programacion.tallermecanico.vista.grafica.controladores.InsertarVehiculo;
 import org.iesalandalus.programacion.tallermecanico.vista.grafica.utilidades.Controlador;
 import org.iesalandalus.programacion.tallermecanico.vista.grafica.utilidades.Controladores;
 import org.iesalandalus.programacion.tallermecanico.vista.grafica.utilidades.Dialogos;
@@ -75,7 +76,8 @@ public class VistaGrafica implements Vista {
 
     @Override
     public Vehiculo leerVehiculo() {
-        return null;
+        InsertarVehiculo ventanaInsertarVehiculo = (InsertarVehiculo) Controladores.get("/vistas/InsertarVehiculo.fxml", "Inserción de Vehículos", ventanaPrincipal.getEscenario());
+        return ventanaInsertarVehiculo.getVehiculo();
     }
 
     @Override
