@@ -22,6 +22,7 @@ public class VentanaPrincipal extends Controlador {
     private final BorrarCliente ventanaBorrarCliente = (BorrarCliente) Controladores.get("/vistas/BorrarCliente.fxml", "Borrado de Clientes", getEscenario());
     private final BuscarCliente ventanaBuscarCliente = (BuscarCliente) Controladores.get("/vistas/BuscarCliente.fxml", "Búsqueda de Clientes", getEscenario());
     private final InsertarVehiculo ventanaInsertarVehiculo = (InsertarVehiculo) Controladores.get("/vistas/InsertarVehiculo.fxml", "Inserción de Vehículos", getEscenario());
+    private final BorrarVehiculo ventanaBorrarVehiculo = (BorrarVehiculo) Controladores.get("/vistas/BorrarVehiculo.fxml", "Borrado de Vehículos", getEscenario());
 
     @FXML
     private Button btBorrarCliente;
@@ -123,7 +124,11 @@ public class VentanaPrincipal extends Controlador {
 
     @FXML
     void borrarVehiculos() {
-
+        ventanaBorrarVehiculo.limpiar();
+        ventanaBorrarVehiculo.getEscenario().showAndWait();
+        if (!ventanaBorrarVehiculo.isCancelado()) {
+            VistaGrafica.getInstancia().getGestorEventos().notificar(Evento.BORRAR_VEHICULO);
+        }
     }
 
 
