@@ -50,12 +50,15 @@ public class VistaGrafica implements Vista {
     public Cliente leerClienteDni() {
         BorrarCliente ventanaBorrar = (BorrarCliente) Controladores.get("/vistas/BorrarCliente.fxml", "Borrado de Clientes", ventanaPrincipal.getEscenario());
         BuscarCliente ventanaBuscarCliente = (BuscarCliente) Controladores.get("/vistas/BuscarCliente.fxml", "Búsqueda de Clientes", ventanaPrincipal.getEscenario());
+        InsertarTrabajo ventanaInsertarTrabajo = (InsertarTrabajo) Controladores.get("/vistas/InsertarTrabajo.fxml", "Inserción de Trabajos", ventanaPrincipal.getEscenario());
         Cliente cliente;
 
         if (ventanaBuscarCliente.getEscenario().isShowing()) {
             cliente = ventanaBuscarCliente.getCliente();
-        } else {
+        } else if (ventanaBorrar.getEscenario().isShowing()){
             cliente = ventanaBorrar.getCliente();
+        } else {
+            cliente = ventanaInsertarTrabajo.getCliente();
         }
 
         return cliente;
@@ -81,11 +84,15 @@ public class VistaGrafica implements Vista {
     public Vehiculo leerVehiculoMatricula() {
         BorrarVehiculo ventanaBorrarVehiculo = (BorrarVehiculo) Controladores.get("/vistas/BorrarVehiculo.fxml", "Borrado de Vehículos", ventanaPrincipal.getEscenario());
         BuscarVehiculo ventanaBuscarVehiculo = (BuscarVehiculo) Controladores.get("/vistas/BuscarVehiculo.fxml", "Búsqueda de Vehículos", ventanaPrincipal.getEscenario());
-        Vehiculo vehiculo;
+        InsertarTrabajo ventanaInsertarTrabajo = (InsertarTrabajo) Controladores.get("/vistas/InsertarTrabajo.fxml", "Inserción de Trabajos", ventanaPrincipal.getEscenario());
+
+        Vehiculo vehiculo = null;
         if (ventanaBorrarVehiculo.getEscenario().isShowing()) {
             vehiculo = ventanaBorrarVehiculo.getVehiculoMatricula();
-        } else {
+        } else if (ventanaBuscarVehiculo.getEscenario().isShowing()){
             vehiculo = ventanaBuscarVehiculo.getVehiculoMatricula();
+        } else if (ventanaInsertarTrabajo.getEscenario().isShowing()) {
+            vehiculo = ventanaInsertarTrabajo.getVehiculoMatricula();
         }
 
         return vehiculo;
@@ -156,13 +163,26 @@ public class VistaGrafica implements Vista {
     @Override
     public void mostrarCliente(Cliente cliente) {
         BuscarCliente ventanaBuscarCliente = (BuscarCliente) Controladores.get("/vistas/BuscarCliente.fxml", "Búsqueda de Clientes", ventanaPrincipal.getEscenario());
-        ventanaBuscarCliente.actualizar(cliente);
+        InsertarTrabajo ventanaInsertarTrabajo = (InsertarTrabajo) Controladores.get("/vistas/InsertarTrabajo.fxml", "Inserción de Trabajos", ventanaPrincipal.getEscenario());
+
+        if (ventanaBuscarCliente.getEscenario().isShowing()) {
+            ventanaBuscarCliente.actualizar(cliente);
+        } else if (ventanaInsertarTrabajo.getEscenario().isShowing()) {
+            ventanaInsertarTrabajo.actualizar(cliente);
+        }
+
     }
 
     @Override
     public void mostrarVehiculo(Vehiculo vehiculo) {
         BuscarVehiculo ventanaBuscarVehiculo = (BuscarVehiculo) Controladores.get("/vistas/BuscarVehiculo.fxml", "Búsqueda de Vehículos", ventanaPrincipal.getEscenario());
-        ventanaBuscarVehiculo.actualizar(vehiculo);
+        InsertarTrabajo ventanaInsertarTrabajo = (InsertarTrabajo) Controladores.get("/vistas/InsertarTrabajo.fxml", "Inserción de Trabajos", ventanaPrincipal.getEscenario());
+
+        if (ventanaBuscarVehiculo.getEscenario().isShowing()) {
+            ventanaBuscarVehiculo.actualizar(vehiculo);
+        } else if (ventanaInsertarTrabajo.getEscenario().isShowing()) {
+            ventanaInsertarTrabajo.actualizar(vehiculo);
+        }
     }
 
     @Override

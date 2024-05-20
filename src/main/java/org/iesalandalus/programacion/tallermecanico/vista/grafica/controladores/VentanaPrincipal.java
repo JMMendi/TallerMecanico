@@ -24,6 +24,8 @@ public class VentanaPrincipal extends Controlador {
     private final InsertarVehiculo ventanaInsertarVehiculo = (InsertarVehiculo) Controladores.get("/vistas/InsertarVehiculo.fxml", "Inserción de Vehículos", getEscenario());
     private final BorrarVehiculo ventanaBorrarVehiculo = (BorrarVehiculo) Controladores.get("/vistas/BorrarVehiculo.fxml", "Borrado de Vehículos", getEscenario());
     private final BuscarVehiculo ventanaBuscarVehiculo = (BuscarVehiculo) Controladores.get("/vistas/BuscarVehiculo.fxml", "Búsqueda de Vehículos", getEscenario());
+    private final InsertarTrabajo ventanaInsertarTrabajo = (InsertarTrabajo) Controladores.get("/vistas/InsertarTrabajo.fxml", "Inserción de Trabajos", getEscenario());
+
 
     @FXML
     private Button btBorrarCliente;
@@ -135,6 +137,15 @@ public class VentanaPrincipal extends Controlador {
 
     @FXML
     void insertarTrabajos() {
+        ventanaInsertarTrabajo.limpiar();
+        ventanaInsertarTrabajo.getEscenario().showAndWait();
+        if (!ventanaInsertarTrabajo.isCancelado()) {
+            if (ventanaInsertarTrabajo.isTipoTrabajo()) {
+                VistaGrafica.getInstancia().getGestorEventos().notificar(Evento.INSERTAR_MECANICO);
+            } else {
+                VistaGrafica.getInstancia().getGestorEventos().notificar(Evento.INSERTAR_REVISION);
+            }
+        }
 
     }
 

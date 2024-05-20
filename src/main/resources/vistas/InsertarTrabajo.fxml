@@ -1,14 +1,185 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="vistas.InsertarTrabajo"
-            prefHeight="400.0" prefWidth="600.0">
 
-</AnchorPane>
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="499.0" prefWidth="623.0" style="-fx-background-color: #54B368;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.iesalandalus.programacion.tallermecanico.vista.grafica.controladores.InsertarTrabajo">
+   <children>
+      <Label text="Inserción de Trabajos">
+         <font>
+            <Font name="MV Boli" size="18.0" />
+         </font>
+         <VBox.margin>
+            <Insets bottom="30.0" />
+         </VBox.margin>
+      </Label>
+      <HBox prefHeight="24.0" prefWidth="600.0">
+         <children>
+            <Label text="Cliente" underline="true">
+               <HBox.margin>
+                  <Insets left="140.0" />
+               </HBox.margin>
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label text="Vehículo" underline="true">
+               <HBox.margin>
+                  <Insets left="260.0" />
+               </HBox.margin>
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
+      <HBox fillHeight="false" minHeight="-Infinity" minWidth="-Infinity" prefHeight="202.0" prefWidth="600.0">
+         <children>
+            <HBox prefHeight="213.0" prefWidth="301.0">
+               <children>
+                  <GridPane prefHeight="202.0" prefWidth="278.0" style="-fx-border-color: #389C8B; -fx-border-radius: 10;">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="146.0" minWidth="10.0" prefWidth="96.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="205.0" minWidth="10.0" prefWidth="205.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Label text="Nombre">
+                           <GridPane.margin>
+                              <Insets left="20.0" />
+                           </GridPane.margin>
+                        </Label>
+                        <Label text="DNI" GridPane.rowIndex="1">
+                           <GridPane.margin>
+                              <Insets left="20.0" />
+                           </GridPane.margin>
+                        </Label>
+                        <Label text="Teléfono" GridPane.rowIndex="2">
+                           <GridPane.margin>
+                              <Insets left="20.0" />
+                           </GridPane.margin>
+                        </Label>
+                        <TextField fx:id="tfDni" onKeyTyped="#mostrarCliente" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                           <GridPane.margin>
+                              <Insets right="40.0" />
+                           </GridPane.margin>
+                        </TextField>
+                        <TextField fx:id="tfNombre" disable="true" GridPane.columnIndex="1">
+                           <GridPane.margin>
+                              <Insets right="40.0" />
+                           </GridPane.margin>
+                        </TextField>
+                        <TextField fx:id="tfTelefono" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                           <GridPane.margin>
+                              <Insets right="40.0" />
+                           </GridPane.margin>
+                        </TextField>
+                     </children>
+                     <HBox.margin>
+                        <Insets left="20.0" />
+                     </HBox.margin>
+                  </GridPane>
+               </children>
+            </HBox>
+            <HBox prefHeight="206.0" prefWidth="299.0" style="-fx-border-radius: 10; -fx-border-color: #389C8B;">
+               <children>
+                  <GridPane prefHeight="202.0" prefWidth="311.0">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="145.0" minWidth="10.0" prefWidth="101.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="198.0" minWidth="10.0" prefWidth="198.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Label text="Marca">
+                           <GridPane.margin>
+                              <Insets left="20.0" />
+                           </GridPane.margin>
+                        </Label>
+                        <Label text="Matrícula" GridPane.rowIndex="1">
+                           <GridPane.margin>
+                              <Insets left="20.0" />
+                           </GridPane.margin>
+                        </Label>
+                        <Label text="Modelo" GridPane.rowIndex="2">
+                           <GridPane.margin>
+                              <Insets left="20.0" />
+                           </GridPane.margin>
+                        </Label>
+                        <TextField fx:id="tfMarca" disable="true" GridPane.columnIndex="1">
+                           <GridPane.margin>
+                              <Insets right="40.0" />
+                           </GridPane.margin>
+                        </TextField>
+                        <TextField fx:id="tfMatricula" onKeyTyped="#mostrarVehiculo" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                           <GridPane.margin>
+                              <Insets right="40.0" />
+                           </GridPane.margin>
+                        </TextField>
+                        <TextField fx:id="tfModelo" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                           <GridPane.margin>
+                              <Insets right="40.0" />
+                           </GridPane.margin>
+                        </TextField>
+                     </children>
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                  </GridPane>
+               </children>
+            </HBox>
+         </children>
+      </HBox>
+      <Label text="Fecha de Inicio">
+         <font>
+            <Font size="14.0" />
+         </font>
+         <VBox.margin>
+            <Insets top="5.0" />
+         </VBox.margin>
+      </Label>
+      <DatePicker fx:id="dpFechaInicio">
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+      </DatePicker>
+      <Label text="Tipo de Trabajo">
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+      </Label>
+      <ChoiceBox fx:id="cbTipoTrabajo" prefWidth="150.0">
+         <VBox.margin>
+            <Insets top="20.0" />
+         </VBox.margin>
+      </ChoiceBox>
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+         <children>
+            <Button fx:id="btAceptar" mnemonicParsing="false" onAction="#insertarTrabajo" text="Aceptar">
+               <HBox.margin>
+                  <Insets right="200.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="btCancelar" mnemonicParsing="false" onAction="#cancelarSalir" text="Cancelar" />
+         </children>
+      </HBox>
+   </children>
+</VBox>
