@@ -192,7 +192,8 @@ public class VistaGrafica implements Vista {
 
     @Override
     public void mostrarClientes(List<Cliente> clientes) {
-
+        ListarClientes ventanaListarClientes = (ListarClientes) Controladores.get("/vistas/ListarClientes.fxml", "Listado de Clientes", ventanaPrincipal.getEscenario());
+        ventanaListarClientes.rellenarLista(clientes);
     }
 
     @Override
