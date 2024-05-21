@@ -1,6 +1,6 @@
 package org.iesalandalus.programacion.tallermecanico.modelo.negocio.mariadb;
 
-import org.iesalandalus.programacion.tallermecanico.modelo.dominio.Cliente;
+
 import org.iesalandalus.programacion.tallermecanico.modelo.dominio.Vehiculo;
 import org.iesalandalus.programacion.tallermecanico.modelo.negocio.IVehiculos;
 import org.mariadb.jdbc.Connection;
@@ -104,7 +104,7 @@ public class Vehiculos implements IVehiculos {
     @Override
     public void borrar(Vehiculo vehiculo) throws OperationNotSupportedException {
         Objects.requireNonNull(vehiculo, "No se puede borrar un vehículo nulo.");
-        try (PreparedStatement sentencia = conexion.prepareStatement("delete from vehiculos where matricula = ?")) {
+        try (PreparedStatement sentencia = conexion.prepareStatement("delete from vehículos where matricula = ?")) {
             sentencia.setString(1, vehiculo.matricula());
             int filas = sentencia.executeUpdate();
             if (filas == 0) {

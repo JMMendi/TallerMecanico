@@ -17,4 +17,6 @@ public interface IVehiculos {
     Vehiculo buscar(Vehiculo vehiculo);
 
     void borrar(Vehiculo vehiculo) throws OperationNotSupportedException;
+
+
 }

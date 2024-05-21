@@ -20,7 +20,7 @@ public class Main {
 
     private static Pair<FabricaVista, FabricaFuenteDatos> procesarArgumentos(String[] args) {
         FabricaVista fabricaVista = FabricaVista.GRAFICA;
-        FabricaFuenteDatos fabricaFuenteDatos = FabricaFuenteDatos.MARIADB;
+        FabricaFuenteDatos fabricaFuenteDatos = FabricaFuenteDatos.MONGODB;
         for (String argumento : args) {
             if (argumento.equalsIgnoreCase("-vventanas")) {
                 fabricaVista = FabricaVista.GRAFICA;
@@ -30,6 +30,8 @@ public class Main {
                 fabricaFuenteDatos = FabricaFuenteDatos.FICHEROS;
             } else if (argumento.equalsIgnoreCase("-fdmariadb")) {
                 fabricaFuenteDatos = FabricaFuenteDatos.MARIADB;
+            } else if (argumento.equalsIgnoreCase("-fdmongodb")) {
+                fabricaFuenteDatos = FabricaFuenteDatos.MONGODB;
             }
         }
         return new Pair<>(fabricaVista, fabricaFuenteDatos);
