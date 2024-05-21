@@ -25,6 +25,7 @@ public class VentanaPrincipal extends Controlador {
     private final BorrarVehiculo ventanaBorrarVehiculo = (BorrarVehiculo) Controladores.get("/vistas/BorrarVehiculo.fxml", "Borrado de Vehículos", getEscenario());
     private final BuscarVehiculo ventanaBuscarVehiculo = (BuscarVehiculo) Controladores.get("/vistas/BuscarVehiculo.fxml", "Búsqueda de Vehículos", getEscenario());
     private final InsertarTrabajo ventanaInsertarTrabajo = (InsertarTrabajo) Controladores.get("/vistas/InsertarTrabajo.fxml", "Inserción de Trabajos", getEscenario());
+    private final ListarClientes ventanaListarClientes = (ListarClientes) Controladores.get("/vistas/ListarClientes.fxml", "Listado de Clientes", getEscenario());
 
 
     @FXML
@@ -160,7 +161,7 @@ public class VentanaPrincipal extends Controlador {
 
     @FXML
     void listaClientes() {
-
+        ventanaListarClientes.getEscenario().show();
     }
 
     @FXML
